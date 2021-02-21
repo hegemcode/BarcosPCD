@@ -27,7 +27,7 @@ public class Puerta {
         Método de la puerta que indica cuando un barco b entra.
         @param b El barco que va a entrar por la puerta.
      */
-    public void entrar(Barco b) {
+     public synchronized void entrar(Barco b) {
         System.out.println("El barco " + b.getId() + " entra");
         System.out.println("El barco " + b.getId() + " entra");
         System.out.println("El barco " + b.getId() + " entra");
@@ -37,7 +37,7 @@ public class Puerta {
         Método de la puerta que indica cuando un barco va a salir.
         @param b El barco que saldrá de la puerta
      */
-    public void salir(Barco b) {
+     public  synchronized  void salir(Barco b) {
         System.out.println("El barco " + b.getId() + " sale");
         System.out.println("El barco " + b.getId() + " sale");
         System.out.println("El barco " + b.getId() + " sale");
