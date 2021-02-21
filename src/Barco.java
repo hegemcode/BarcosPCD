@@ -4,18 +4,15 @@
 public class Barco implements Runnable {
     private int id;
     private boolean entrada;
-    private Puerta puerta;
 
     /*
         Constructor parametrizado.
         @param id El ID del barco.
         @param direccion El sentido del barco.
-        @param puerta La puerta por la que pasa el barco.
      */
-    public Barco(int id, boolean entrada, Puerta puerta) {
+    public Barco(int id, boolean entrada) {
         this.id = id;
         this.entrada = entrada;
-        this.puerta = puerta;
     }
 
     /*
@@ -31,8 +28,8 @@ public class Barco implements Runnable {
      */
     public void run() {
         if (entrada) {
-            puerta.entrar(this);
+            Puerta.getInstance().entrar(this);
         } else
-            puerta.salir(this);
+            Puerta.getInstance().salir(this);
     }
 }
