@@ -21,7 +21,6 @@ public class Puerta {
         System.out.println("El barco " + b.getId() + " entra");
         System.out.println("El barco " + b.getId() + " entra");
         System.out.println("El barco " + b.getId() + " entra");
-        b.getTorre().incEntrando();
     }
 
     /*
@@ -32,6 +31,5 @@ public class Puerta {
         System.out.println("El barco " + b.getId() + " sale");
         System.out.println("El barco " + b.getId() + " sale");
         System.out.println("El barco " + b.getId() + " sale");
-        b.getTorre().incSaliendo();
     }
 }

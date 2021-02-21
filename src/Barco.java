@@ -25,38 +25,24 @@ public class Barco implements Runnable {
     public int getId() {
         return this.id;
     }
+    public TorreControl getTorre(){return this.torre;}
+
     /*
         Entrar de barco
      */
-    public synchronized void entrarBarco() {
-        while (!torre.permisoEntrada(this)) {
-            try {
-                System.out.println("ESPEROOOOOOOOOOOOOOOOO");
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        puerta.entrar(this);
-        //torre.incEntrando(); // Aumenta el contador de barcos que estan entrando
-        torre.finEntrada(this);
+    public void entrarBarco() {
+       getTorre().permisoEntrada(this);
+       this.puerta.entrar(this);
+       getTorre().finEntrada(this);
     }
 
     /*
         Salir de barco
      */
-    public synchronized void salirBarco() {
-        while (!torre.permisoSalida(this)) {
-            try {
-                System.out.println("ESPEROOOOOOOOOOOOOOOOO");
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        puerta.salir(this);
-        //torre.incSaliendo(); // Aumenta el contador de barcos que estan entrando
-        torre.finSalida(this);
+    public void salirBarco() {
+        getTorre().permisoSalida(this);
+        this.puerta.salir(this);
+        getTorre().finSalida(this);
     }
 
     /*
@@ -70,5 +56,4 @@ public class Barco implements Runnable {
             salirBarco();
         }
     }
-    public TorreControl getTorre(){return this.torre;}
 }
