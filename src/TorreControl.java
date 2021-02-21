@@ -9,30 +9,33 @@ public class TorreControl {
     }
 
     public synchronized void permisoEntrada(Barco b) {
-            System.out.println("El barco " + b.getId() + " pide permiso para entrar...");
-            System.out.println("El barco " + b.getId() + " pide permiso para entrar...");
-            System.out.println("El barco " + b.getId() + " pide permiso para entrar...");
-            while (b_saliendo != 0) {
+        //System.out.println("El barco " + b.getId() + " PIDE permiso para entrar...");
+
+        while (b_saliendo != 0) {
                 try {
                     System.out.println("ESPERANDO");
                     wait();
                 } catch (InterruptedException e) { e.printStackTrace(); }
             }
-            System.out.println("ACCESO PERMITIDO");
+        System.out.println("El barco " + b.getId() + " TIENE permiso para entrar...");
+        System.out.println("El barco " + b.getId() + " TIENE permiso para entrar...");
+        System.out.println("El barco " + b.getId() + " TIENE permiso para entrar...");
             b_entrando++;
     }
 
     public synchronized void permisoSalida (Barco b) {
-            System.out.println("El barco " + b.getId() + " pide permiso para salir...");
-            System.out.println("El barco " + b.getId() + " pide permiso para salir...");
-            System.out.println("El barco " + b.getId() + " pide permiso para salir...");
+            //System.out.println("El barco " + b.getId() + " PIDE permiso para salir...");
             while (b_entrando != 0) {
                 try {
                     System.out.println("ESPERANDO");
                     wait();
-                } catch (InterruptedException e) { e.printStackTrace(); }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        System.out.println("ACCESO PERMITIDO");
+        System.out.println("El barco " + b.getId() + " TIENE permiso para salir...");
+        System.out.println("El barco " + b.getId() + " TIENE permiso para salir...");
+        System.out.println("El barco " + b.getId() + " TIENE permiso para salir...");
         b_saliendo++;
     }
 
