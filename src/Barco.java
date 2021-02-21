@@ -27,9 +27,10 @@ public class Barco implements Runnable {
         Método run que arranca al crear un Hilo.
      */
     public void run() {
-        if (entrada) {
-            Puerta.getInstance().entrar(this);
-        } else
-            Puerta.getInstance().salir(this);
+            if (entrada) {
+                Puerta.getInstance().entrar(this);
+            } else
+                Puerta.getInstance().salir(this);
+
     }
 }
