@@ -4,15 +4,16 @@
 public class Barco implements Runnable {
     private int id;
     private boolean entrada;
-
+    private TorreControl torre;
     /*
         Constructor parametrizado.
         @param id El ID del barco.
         @param direccion El sentido del barco.
      */
-    public Barco(int id, boolean entrada) {
+    public Barco(int id, boolean entrada, TorreControl torre) {
         this.id = id;
         this.entrada = entrada;
+        this.torre = torre;
     }
 
     /*
@@ -28,9 +29,29 @@ public class Barco implements Runnable {
      */
     public void run() {
             if (entrada) {
-                Puerta.getInstance().entrar(this);
-            } else
-                Puerta.getInstance().salir(this);
+                synchronized (this) {
+                    while(!torre.permisoEntrada(this)) {
+                        try {
+                            wait();
+                        } catch (InterruptedException e) { e.printStackTrace(); }
+                    }
+                    Puerta.getInstance().entrar(this);
+                    torre.incEntrando(); // Aumenta el contador de barcos que estan entrando
+                    torre.finEntrada(this);
+                }
 
+
+
+            } else
+                synchronized (this) {
+                    while(!torre.permisoSalida(this)) {
+                        try {
+                            wait();
+                        } catch (InterruptedException e) { e.printStackTrace(); }
+                    }
+                    Puerta.getInstance().salir(this);
+                    torre.incSaliendo(); // Aumenta el contador de barcos que estan entrando
+                    torre.finSalida(this);
+                }
     }
 }
