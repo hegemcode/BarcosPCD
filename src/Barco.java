@@ -34,6 +34,7 @@ public class Barco implements Runnable {
                 synchronized (this) {
                     while(!torre.permisoEntrada(this)) {
                         try {
+                            System.out.println("esperando");
                             wait();
                         } catch (InterruptedException e) { e.printStackTrace(); }
                     }
@@ -41,17 +42,19 @@ public class Barco implements Runnable {
                     torre.incEntrando(); // Aumenta el contador de barcos que estan entrando
                     torre.finEntrada(this);
                 }
-
-            } else
+            } else {
                 synchronized (this) {
-                    while(!torre.permisoSalida(this)) {
+                    while (!torre.permisoSalida(this)) {
                         try {
                             wait();
-                        } catch (InterruptedException e) { e.printStackTrace(); }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                     puerta.salir(this);
                     torre.incSaliendo(); // Aumenta el contador de barcos que estan entrando
                     torre.finSalida(this);
                 }
+            }
     }
 }
