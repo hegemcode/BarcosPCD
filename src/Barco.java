@@ -30,28 +30,35 @@ public class Barco implements Runnable {
         Método run que arranca al crear un Hilo.
      */
     public void run() {
-            if (entrada) {
-                synchronized (this) {
-                    while(!torre.permisoEntrada(this)) {
-                        try {
-                            wait();
-                        } catch (InterruptedException e) { e.printStackTrace(); }
+        if (entrada) {
+            synchronized (this) {
+                while (!torre.permisoEntrada(this)) {
+                    try {
+                        System.out.println("ESPEROOOOOOOOOOOOOOOOOO");
+                        wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                   puerta.entrar(this);
-                    torre.incEntrando(); // Aumenta el contador de barcos que estan entrando
-                    torre.finEntrada(this);
                 }
+                puerta.entrar(this);
+                torre.incEntrando(); // Aumenta el contador de barcos que estan entrando
+                torre.finEntrada(this);
+            }
 
-            } else
-                synchronized (this) {
-                    while(!torre.permisoSalida(this)) {
-                        try {
-                            wait();
-                        } catch (InterruptedException e) { e.printStackTrace(); }
+        } else {
+            synchronized (this) {
+                while (!torre.permisoSalida(this)) {
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    puerta.salir(this);
-                    torre.incSaliendo(); // Aumenta el contador de barcos que estan entrando
-                    torre.finSalida(this);
                 }
+                puerta.salir(this);
+                torre.incSaliendo(); // Aumenta el contador de barcos que estan entrando
+                torre.finSalida(this);
+            }
+
+        }
     }
 }
