@@ -8,47 +8,46 @@ public class TorreControl {
         this.b_saliendo = 0;
     }
 
-    public synchronized boolean permisoEntrada(Barco b) {
-        System.out.println("El barco " + b.getId() + " pide permiso para entrar...");
-        System.out.println("El barco " + b.getId() + " pide permiso para entrar...");
-        System.out.println("El barco " + b.getId() + " pide permiso para entrar...");
+    public  boolean permisoEntrada(Barco b) {
+        synchronized (this) {
+            System.out.println("El barco " + b.getId() + " pide permiso para entrar...");
+            System.out.println("El barco " + b.getId() + " pide permiso para entrar...");
+            System.out.println("El barco " + b.getId() + " pide permiso para entrar...");
 
-        return this.b_saliendo == 0;
+            return this.b_saliendo == 0;
+        }
     }
 
-    public synchronized boolean permisoSalida(Barco b) {
-        System.out.println("El barco " + b.getId() + " pide permiso para salir...");
-        System.out.println("El barco " + b.getId() + " pide permiso para salir...");
-        System.out.println("El barco " + b.getId() + " pide permiso para salir...");
-
+    public  boolean permisoSalida(Barco b) {
+        synchronized (this) {
+            System.out.println("El barco " + b.getId() + " pide permiso para salir...");
+            System.out.println("El barco " + b.getId() + " pide permiso para salir...");
+            System.out.println("El barco " + b.getId() + " pide permiso para salir...");
+        }
         return this.b_entrando == 0;
     }
 
-    public synchronized void finEntrada(Barco b) {
+    public  void finEntrada(Barco b) {
+        synchronized (this) {
+            System.out.println("El barco " + b.getId() + " ha acabado de entrar...");
+            System.out.println("El barco " + b.getId() + " ha acabado de entrar...");
+            System.out.println("El barco " + b.getId() + " ha acabado de entrar...");
+            this.b_entrando--;
+            notifyAll();
 
-        System.out.println("El barco " + b.getId() + " ha acabado de entrar...");
-        System.out.println("El barco " + b.getId() + " ha acabado de entrar...");
-        System.out.println("El barco " + b.getId() + " ha acabado de entrar...");
-        this.b_entrando--;
-        notifyAll();
+        }
     }
 
-    public synchronized void finSalida(Barco b) {
-
-        System.out.println("El barco " + b.getId() + " ha acabado de salir...");
-        System.out.println("El barco " + b.getId() + " ha acabado de salir...");
-        System.out.println("El barco " + b.getId() + " ha acabado de salir...");
-        this.b_saliendo--;
-        notifyAll();
+    public  void finSalida(Barco b) {
+        synchronized (this) {
+            System.out.println("El barco " + b.getId() + " ha acabado de salir...");
+            System.out.println("El barco " + b.getId() + " ha acabado de salir...");
+            System.out.println("El barco " + b.getId() + " ha acabado de salir...");
+            this.b_saliendo--;
+            notifyAll();
+        }
     }
 
-    public void incEntrando () {
-        this.b_entrando++;
-    }
-    public void incSaliendo () {
-        this.b_saliendo++;
-
-    }
-
-
+    public void incEntrando () { this.b_entrando++; }
+    public void incSaliendo () { this.b_saliendo++; }
 }
