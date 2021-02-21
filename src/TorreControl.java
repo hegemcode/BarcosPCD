@@ -48,6 +48,6 @@ public class TorreControl {
         }
     }
 
-    public void incEntrando () { this.b_entrando++; }
-    public void incSaliendo () { this.b_saliendo++; }
+    public synchronized void incEntrando () { this.b_entrando++; }
+    public synchronized void incSaliendo () { this.b_saliendo++; }
 }

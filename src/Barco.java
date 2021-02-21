@@ -38,7 +38,7 @@ public class Barco implements Runnable {
             }
         }
         puerta.entrar(this);
-        torre.incEntrando(); // Aumenta el contador de barcos que estan entrando
+        //torre.incEntrando(); // Aumenta el contador de barcos que estan entrando
         torre.finEntrada(this);
     }
 
@@ -55,7 +55,7 @@ public class Barco implements Runnable {
             }
         }
         puerta.salir(this);
-        torre.incSaliendo(); // Aumenta el contador de barcos que estan entrando
+        //torre.incSaliendo(); // Aumenta el contador de barcos que estan entrando
         torre.finSalida(this);
     }
 
@@ -64,36 +64,11 @@ public class Barco implements Runnable {
      */
     public void run() {
         if (entrada) {
-            /*synchronized (this) {
-                while (!torre.permisoEntrada(this)) {
-                    try {
-                        System.out.println("ESPEROOOOOOOOOOOOOOOOOO");
-                        wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                puerta.entrar(this);
-                torre.incEntrando(); // Aumenta el contador de barcos que estan entrando
-                torre.finEntrada(this);
-            }*/
             entrarBarco();
 
         } else {
-            /*synchronized (this) {
-                while (!torre.permisoSalida(this)) {
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                puerta.salir(this);
-                torre.incSaliendo(); // Aumenta el contador de barcos que estan entrando
-                torre.finSalida(this);
-            }
-             */
             salirBarco();
         }
     }
+    public TorreControl getTorre(){return this.torre;}
 }
