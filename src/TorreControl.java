@@ -8,7 +8,7 @@ public class TorreControl {
         this.b_saliendo = 0;
     }
 
-    public  boolean permisoEntrada(Barco b) {
+    public synchronized boolean permisoEntrada(Barco b) {
         System.out.println("El barco " + b.getId() + " pide permiso para entrar...");
         System.out.println("El barco " + b.getId() + " pide permiso para entrar...");
         System.out.println("El barco " + b.getId() + " pide permiso para entrar...");
@@ -16,7 +16,7 @@ public class TorreControl {
         return this.b_saliendo == 0;
     }
 
-    public boolean permisoSalida(Barco b) {
+    public synchronized boolean permisoSalida(Barco b) {
         System.out.println("El barco " + b.getId() + " pide permiso para salir...");
         System.out.println("El barco " + b.getId() + " pide permiso para salir...");
         System.out.println("El barco " + b.getId() + " pide permiso para salir...");
