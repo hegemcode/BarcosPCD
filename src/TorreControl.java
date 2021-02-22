@@ -1,12 +1,23 @@
 public class TorreControl {
+    private static TorreControl torre;
     private int b_entrando, b_saliendo;
 
     /*
         Constructor por defecto de la torre de control. El numero de barcos de entrada y salida son 0.
      */
-    public TorreControl() {
+    private TorreControl() {
         this.b_entrando = 0;
         this.b_saliendo = 0;
+    }
+    /*
+        getInstance del Singleton.
+        @return La única instancia de la torre de control.
+     */
+    public synchronized static TorreControl getInstance(){
+        if(torre == null){
+            torre = new TorreControl();
+        }
+        return torre;
     }
     /*
         PermisoEntrada es el protocolo de entrada a la sección crítica. El barco b pide permiso a la torre de control:

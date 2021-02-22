@@ -3,15 +3,24 @@
         */
 
 public class Puerta {
+    private static Puerta puerta;
     private String id;
 
     /*
         Constructor por defecto privado de la puerta.
      */
-    public Puerta() {
+    private Puerta() {
         this.id = "2530h";
     }
-
+    /*
+        Getinstance del singleton de Puerta.
+     */
+    public synchronized static Puerta getInstance(){
+        if(puerta == null){
+            puerta = new Puerta();
+        }
+        return puerta;
+    }
     /*
         Método de la puerta que indica cuando un barco b entra.
         @param b El barco que va a entrar por la puerta.
