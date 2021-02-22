@@ -6,10 +6,14 @@ public class Barco implements Runnable {
     private boolean entrada;
     Puerta puerta;
     private TorreControl torre;
+
     /*
         Constructor parametrizado.
         @param id El ID del barco.
         @param direccion El sentido del barco.
+        @param entrada La direccion del barco
+        @param puerta La puerta
+        @param torre La torre de control
      */
     public Barco(int id, boolean entrada, Puerta puerta, TorreControl torre) {
         this.id = id;
@@ -20,7 +24,7 @@ public class Barco implements Runnable {
 
     /*
         Devuelve el id del barco.
-        @return El id del barco.
+        @return El id del barco como entero.
      */
     public int getId() {
         return this.id;
@@ -28,32 +32,17 @@ public class Barco implements Runnable {
     public TorreControl getTorre(){return this.torre;}
 
     /*
-        Entrar de barco
-     */
-    public void entrarBarco() {
-       getTorre().permisoEntrada(this);
-       this.puerta.entrar(this);
-       getTorre().finEntrada(this);
-    }
-
-    /*
-        Salir de barco
-     */
-    public void salirBarco() {
-        getTorre().permisoSalida(this);
-        this.puerta.salir(this);
-        getTorre().finSalida(this);
-    }
-
-    /*
         Método run que arranca al crear un Hilo.
      */
     public void run() {
         if (entrada) {
-            entrarBarco();
-
+            getTorre().permisoEntrada(this);
+            this.puerta.entrar(this);
+            getTorre().finEntrada(this);
         } else {
-            salirBarco();
+            getTorre().permisoSalida(this);
+            this.puerta.salir(this);
+            getTorre().finSalida(this);
         }
     }
 }

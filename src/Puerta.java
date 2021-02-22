@@ -12,7 +12,6 @@ public class Puerta {
         this.id = "2530h";
     }
 
-
     /*
         Método de la puerta que indica cuando un barco b entra.
         @param b El barco que va a entrar por la puerta.
