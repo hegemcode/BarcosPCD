@@ -29,7 +29,7 @@ public class TorreControl {
         System.out.println("El barco " + b.getId() + " PIDE permiso para entrar...");
         while (b_saliendo != 0) {
             try {
-                System.out.println("ESPERANDO");
+                System.out.println("El barco "+b.getId()+" esperando para entrar.");
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -50,7 +50,7 @@ public class TorreControl {
         System.out.println("El barco " + b.getId() + " PIDE permiso para salir...");
         while (b_entrando != 0) {
             try {
-                System.out.println("ESPERANDO");
+                System.out.println("El barco "+b.getId()+" esperando para salir.");
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
