@@ -4,23 +4,22 @@
 public class Barco implements Runnable {
     private int id;
     private boolean entrada;
-    Puerta puerta;
-    private TorreControl torre;
     /*
         Constructor parametrizado.
         @param id El ID del barco.
         @param direccion El sentido del barco.
+        @param entrada La direccion del barco
+        @param puerta La puerta
+        @param torre La torre de control
      */
-    public Barco(int id, boolean entrada, Puerta puerta, TorreControl torre) {
+    public Barco(int id, boolean entrada) {
         this.id = id;
         this.entrada = entrada;
-        this.torre = torre;
-        this.puerta = puerta;
     }
 
     /*
         Devuelve el id del barco.
-        @return El id del barco.
+        @return El id del barco como entero.
      */
     public int getId() {
         return this.id;
@@ -30,31 +29,14 @@ public class Barco implements Runnable {
         Método run que arranca al crear un Hilo.
      */
     public void run() {
-            if (entrada) {
-                synchronized (this) {
-                    while(!torre.permisoEntrada(this)) {
-                        try {
-                            System.out.println("esperando");
-                            wait();
-                        } catch (InterruptedException e) { e.printStackTrace(); }
-                    }
-                   puerta.entrar(this);
-                    torre.incEntrando(); // Aumenta el contador de barcos que estan entrando
-                    torre.finEntrada(this);
-                }
-            } else {
-                synchronized (this) {
-                    while (!torre.permisoSalida(this)) {
-                        try {
-                            wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    puerta.salir(this);
-                    torre.incSaliendo(); // Aumenta el contador de barcos que estan entrando
-                    torre.finSalida(this);
-                }
-            }
+        if (entrada) {
+            TorreControl.getInstance().permisoEntrada(this);
+            Puerta.getInstance().entrar(this);
+            TorreControl.getInstance().finEntrada(this);
+        } else {
+            TorreControl.getInstance().permisoSalida(this);
+            Puerta.getInstance().salir(this);
+            TorreControl.getInstance().finSalida(this);
+        }
     }
 }
