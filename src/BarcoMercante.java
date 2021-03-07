@@ -2,9 +2,7 @@ import java.util.Random;
 
 public class BarcoMercante extends Barco{
 
-    private int sal_contenedores = 4;
-    private int harina_contenedores = 5;
-    private int azucar_contenedores = 2;
+    private int contenedores[] = new int[3]; //Posición 0 = azucar; Posición 1 = sal; Posición 2 = harina.
     private Random rand = new Random();
     private Grua grua;
 
@@ -13,8 +11,11 @@ public class BarcoMercante extends Barco{
         @param id El id del barco.
         @param entrada Indica si el barco es de entrada o salida.
      */
-    public BarcoMercante(int id, boolean entrada, boolean mercantil) {
+    public BarcoMercante(int id, boolean entrada, boolean mercantil, int contAzucar, int contSal, int contHarina) {
         super(id, entrada,mercantil);
+        contenedores[0] = contAzucar;
+        contenedores[1] = contSal;
+        contenedores[2] = contHarina;
         grua = new Grua("mercante");
     }
     /*
@@ -25,22 +26,21 @@ public class BarcoMercante extends Barco{
         super.run();
         int caso = 0;
 
-            while(sal_contenedores > 0 || azucar_contenedores > 0 || harina_contenedores > 0) {
-
+            while(contenedores[0] > 0 || contenedores[1] > 0 || contenedores[2] > 0) {
                 caso = rand.nextInt(3);
                 switch (caso) {
                 case 0:
-                    if(sal_contenedores != 0) {
+                    if(contenedores[0] != 0) {
                         grua.put("sal",this);
                     }
                     break;
                 case 1:
-                    if(harina_contenedores != 0) {
+                    if(contenedores[1] != 0) {
                         grua.put("harina",this);
                     }
                     break;
                 case 2:
-                    if(azucar_contenedores != 0) {
+                    if(contenedores[2] != 0) {
                         grua.put("azucar",this);
                     }
                     break;
@@ -51,8 +51,17 @@ public class BarcoMercante extends Barco{
         Puerta.getInstance().salir(this);
         TorreControl.getInstance().finSalida(this);
     }
-    public void reducirContenedorSal(){this.sal_contenedores--;}
-    public void reducirContenedorAzucar(){this.azucar_contenedores--;}
-    public void reducirContenedorHarina(){this.harina_contenedores--;}
-    public int numeroContenedores(){ return this.harina_contenedores + this.sal_contenedores + this.sal_contenedores; }
+    /*
+    Método que reduce el numero de contenedores de un tipo especificado.
+    @Param cont Que tipo de contenedor es: 0=azucar ; 1=sal ; 2=harina
+     */
+    public void reducirContenedor(int cont){
+        this.contenedores[cont]--;
+    }
+    /*
+    Método que devuelve el numero de contenedores totales.
+    @return Numero de contenedores totales
+     */
+    public int numeroContenedores(){
+        return this.contenedores[0] + this.contenedores[1] + this.contenedores[2]; }
 }
