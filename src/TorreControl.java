@@ -58,7 +58,6 @@ public class TorreControl {
             try {
                 b_esperandoSalir++;
                 System.out.println("El barco "+b.getId()+" esperando para salir.");
-                BarcosEsperandoParaSalir++;
                 wait();
                 b_esperandoSalir--;
 
