@@ -23,7 +23,7 @@ public class TorreControl {
     }
     /*
         PermisoEntrada es el protocolo de entrada a la sección crítica. El barco b pide permiso a la torre de control:
-        Si no hay ningún barco saliendo, entonces obtiene el permiso para entrar por la puerta. Debe estar sincronizado porque de no ser así,
+        Si no hay ningún barco saliendo o esperando por salir, entonces obtiene el permiso para entrar por la puerta. Debe estar sincronizado porque de no ser así,
         dos hilos estarían accediendo a una misma variable -> entrando.
         @param b El barco que pide permiso a la torre de control.
      */
@@ -37,8 +37,6 @@ public class TorreControl {
                 e.printStackTrace();
             }
         }
-        System.out.println("El barco " + b.getId() + " TIENE permiso para entrar...");
-        System.out.println("El barco " + b.getId() + " TIENE permiso para entrar...");
         System.out.println("El barco " + b.getId() + " TIENE permiso para entrar...");
         b_entrando++;
     }
@@ -61,8 +59,6 @@ public class TorreControl {
             }
         }
         System.out.println("El barco " + b.getId() + " TIENE permiso para salir...");
-        System.out.println("El barco " + b.getId() + " TIENE permiso para salir...");
-        System.out.println("El barco " + b.getId() + " TIENE permiso para salir...");
         b_saliendo++;
     }
     /*
@@ -72,8 +68,6 @@ public class TorreControl {
         @param b El barco que ha acabado de entrar.
      */
     public synchronized void finEntrada(Barco b) {
-            System.out.println("El barco " + b.getId() + " ha acabado de entrar...");
-            System.out.println("El barco " + b.getId() + " ha acabado de entrar...");
             System.out.println("El barco " + b.getId() + " ha acabado de entrar...");
             this.b_entrando--;
             notifyAll();
@@ -85,8 +79,6 @@ public class TorreControl {
        @param b El barco que ha acabado de salir.
    */
     public synchronized void finSalida(Barco b) {
-            System.out.println("El barco " + b.getId() + " ha acabado de salir...");
-            System.out.println("El barco " + b.getId() + " ha acabado de salir...");
             System.out.println("El barco " + b.getId() + " ha acabado de salir...");
             this.b_saliendo--;
             notifyAll();
