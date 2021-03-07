@@ -1,15 +1,18 @@
 public class TorreControl {
     private static TorreControl torre;
     private int b_entrando, b_saliendo;
-    private int BarcosEsperandoParaSalir;
 
+    private int b_esperandoSalir;
+
+    
     /*
         Constructor por defecto de la torre de control. El numero de barcos de entrada y salida son 0.
      */
     private TorreControl() {
         this.b_entrando = 0;
         this.b_saliendo = 0;
-        this.BarcosEsperandoParaSalir = 0;
+        this.b_esperandoSalir = 0;
+
     }
     /*
         getInstance del Singleton.
@@ -29,7 +32,8 @@ public class TorreControl {
      */
     public synchronized void permisoEntrada(Barco b) {
         System.out.println("El barco " + b.getId() + " PIDE permiso para entrar...");
-        while (b_saliendo != 0 || BarcosEsperandoParaSalir > 0) {
+
+        while (b_saliendo != 0 || b_esperandoSalir != 0) {
             try {
                 System.out.println("El barco "+b.getId()+" esperando para entrar.");
                 wait();
@@ -52,10 +56,12 @@ public class TorreControl {
         System.out.println("El barco " + b.getId() + " PIDE permiso para salir...");
         while (b_entrando != 0) {
             try {
+                b_esperandoSalir++;
                 System.out.println("El barco "+b.getId()+" esperando para salir.");
                 BarcosEsperandoParaSalir++;
                 wait();
-                BarcosEsperandoParaSalir--;
+                b_esperandoSalir--;
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
