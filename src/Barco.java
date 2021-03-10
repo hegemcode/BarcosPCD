@@ -5,6 +5,7 @@ public class Barco implements Runnable {
     private int id;
     private boolean entrada;
     private boolean mercantil;
+    private boolean petrolero;
 
     /*
         Constructor parametrizado.
@@ -14,10 +15,11 @@ public class Barco implements Runnable {
         @param puerta La puerta
         @param torre La torre de control
      */
-    public Barco(int id, boolean entrada, boolean mercantil) {
+    public Barco(int id, boolean entrada, boolean mercantil, boolean petrolero) {
         this.id = id;
         this.entrada = entrada;
         this.mercantil = mercantil;
+        this.petrolero = petrolero;
     }
 
     /*
