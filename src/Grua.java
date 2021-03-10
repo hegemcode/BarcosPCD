@@ -1,3 +1,6 @@
+/*
+Clase que representan a las gruas encargadas de mover contenedores de un tipo específico.
+ */
 public class Grua implements Runnable{
     private String id;
 

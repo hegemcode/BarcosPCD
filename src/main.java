@@ -1,4 +1,10 @@
-
+/*
+Clase Main del programa.
+----------Autores----------
+-
+-
+-
+ */
 public class main {
     public static void main(String[] args) {
         /*

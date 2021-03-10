@@ -1,3 +1,6 @@
+/*
+Clase que representa la torre de control encargada de coordinar los barcos que entran en el puerto.
+ */
 public class TorreControl {
     private static TorreControl torre;
     private int b_entrando, b_saliendo;
