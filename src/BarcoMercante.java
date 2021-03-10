@@ -54,7 +54,7 @@ public class BarcoMercante extends Barco{
         Puerta.getInstance().salir(this);
         TorreControl.getInstance().finSalida(this);
     }
-
+    /*
     Método que reduce el numero de contenedores de un tipo especificado.
     @Param cont Que tipo de contenedor es: 0=azucar ; 1=sal ; 2=harina
      */
