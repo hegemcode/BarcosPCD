@@ -42,6 +42,7 @@ public class ZonaCarga {
             }
         }
         // ZONA CRÍTICA
+        // repostarGas
         repostarAgua(b);
     }
 
