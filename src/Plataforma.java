@@ -1,6 +1,8 @@
 import java.sql.SQLOutput;
 import java.util.concurrent.locks.*;
-
+/*
+Clase que representa la plataforma donde los barcosMercantes depositan sus contenedores y las gruas los recogen.
+ */
 public class Plataforma {
     private static Plataforma p;
     private int capacidad = 1;
@@ -31,7 +33,9 @@ public class Plataforma {
     }
 
     /*
-
+       Método en el que un barco mercante pone un contenedor en la plataforma.
+       @param contenedor String con el tipo de contenedor.
+       @param b BarcoMercante encargado de poner el contenedor.
      */
     public void put(String contenedor, BarcoMercante b){
         monitor.lock();
@@ -47,13 +51,13 @@ public class Plataforma {
             System.out.println("Contenedor " + contenedor + " depositado en la plataforma...");
             switch(contenedor){
                 case "sal": sal_grua.signal();
-                b.reducirContenedorSal();
+                b.reducirContenedor(1);
                 break;
                 case "azucar": azucar_grua.signal();
-                b.reducirContenedorAzucar();
+                b.reducirContenedor(0);
                 break;
                 case "harina": harina_grua.signal();
-                b.reducirContenedorHarina();
+                b.reducirContenedor(2);
                 break;
             }
             if(b.numeroContenedores() == 0){
@@ -67,7 +71,8 @@ public class Plataforma {
     }
 
     /*
-
+    Método en el que una grua extrae el contenedor de la plataforma.
+    @param contenedor Tipo de contenedor que se extrae de la plataforma.
      */
     public void get(String contenedor){
         monitor.lock();

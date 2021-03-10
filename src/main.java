@@ -1,4 +1,10 @@
-
+/*
+Clase Main del programa.
+----------Autores----------
+-
+-
+-
+ */
 public class main {
     public static void main(String[] args) {
         //Plataforma p = Plataforma.getInstance();
@@ -21,6 +27,7 @@ public class main {
         //Thread t6 = new Thread(new Barco(6, true,false,false));
         //Thread t7 = new Thread(new Barco(7, false,false,false));
         //m1.start();
+
         t1.start();
         t2.start();
         t3.start();

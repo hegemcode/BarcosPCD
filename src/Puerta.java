@@ -1,7 +1,6 @@
 /*
-        Representa la puerta en la cual los barcos saldrán y entrarán dependiendo de su sentido.
-        */
-
+Clase que representa la puerta en la cual los barcos saldrán y entrarán dependiendo de su sentido.
+*/
 public class Puerta {
     private static Puerta puerta;
     private String id;
