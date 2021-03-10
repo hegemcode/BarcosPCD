@@ -19,4 +19,20 @@ public class Petrolero extends Barco{
             e.printStackTrace();
         }
     }
+
+    public int getCont_gas() {
+        return cont_gas;
+    }
+
+    public void setCont_gas(int cont_gas) {
+        this.cont_gas = cont_gas;
+    }
+
+    public int getCont_agua() {
+        return cont_agua;
+    }
+
+    public void setCont_agua(int cont_agua) {
+        this.cont_agua = cont_agua;
+    }
 }
