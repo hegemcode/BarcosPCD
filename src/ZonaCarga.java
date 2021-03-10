@@ -22,8 +22,19 @@ public class ZonaCarga {
         return z;
     }
 
-    public void llegar(BarcoPetrolero b){
-        
+    public void llegar(BarcoPetrolero b) throws InterruptedException {
+        mutex.acquire();
+        llegada.acquire();
+        if(llegada.drainPermits() == 0){ // Si no hay mas capacidad para acceder al recurso, es decir, si han entrado los 5 barcos
+
+        }
+        else{
+            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
+            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
+            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
+        }
+
+        mutex.release();
     }
     public void cogerAgua(BarcoPetrolero b){
         try {
