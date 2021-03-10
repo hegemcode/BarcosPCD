@@ -1,5 +1,7 @@
+/*
+    Barco mercante que hereda de la clase estandar de barcos "Barco"
+ */
 import java.util.Random;
-
 public class BarcoMercante extends Barco{
 
     private int contenedores[] = new int[3]; //Posición 0 = azucar; Posición 1 = sal; Posición 2 = harina.
@@ -11,8 +13,9 @@ public class BarcoMercante extends Barco{
         @param id El id del barco.
         @param entrada Indica si el barco es de entrada o salida.
      */
-    public BarcoMercante(int id, boolean entrada, boolean mercantil, int contAzucar, int contSal, int contHarina) {
-        super(id, entrada,mercantil);
+
+    public BarcoMercante(int id, boolean entrada, boolean mercantil, int contAzucar, int contSal, int contHarina, boolean petrolero) {
+        super(id, entrada,mercantil,petrolero);
         contenedores[0] = contAzucar;
         contenedores[1] = contSal;
         contenedores[2] = contHarina;
@@ -51,7 +54,7 @@ public class BarcoMercante extends Barco{
         Puerta.getInstance().salir(this);
         TorreControl.getInstance().finSalida(this);
     }
-    /*
+
     Método que reduce el numero de contenedores de un tipo especificado.
     @Param cont Que tipo de contenedor es: 0=azucar ; 1=sal ; 2=harina
      */
