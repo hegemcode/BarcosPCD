@@ -1,30 +1,33 @@
 
 public class main {
     public static void main(String[] args) {
-        Plataforma p = Plataforma.getInstance();
+        //Plataforma p = Plataforma.getInstance();
+        ZonaCarga z = ZonaCarga.getInstance();
+        /*
         Thread g1 = new Thread(new Grua("sal"));
         Thread g2 = new Thread(new Grua("azucar"));
         Thread g3 = new Thread(new Grua("harina"));
         g1.start();
         g2.start();
         g3.start();
+         */
 
-        Thread t1 = new Thread(new Barco(1, false,false,false));
-        Thread t2 = new Thread(new Barco(2, true,false,false));
-        Thread t3 = new Thread(new Barco(3, false,false,false));
-        Thread t4 = new Thread(new Barco(4, true,false,false));
-        Thread t5 = new Thread(new Barco(5, true,false,false));
-        Thread m1 = new Thread(new BarcoMercante(8,true,true,false));
-        Thread t6 = new Thread(new Barco(6, true,false,false));
-        Thread t7 = new Thread(new Barco(7, false,false,false));
-        m1.start();
+        Thread t1 = new Thread(new BarcoPetrolero(1, true,false,true));
+        Thread t2 = new Thread(new BarcoPetrolero(2, true,false,true));
+        Thread t3 = new Thread(new BarcoPetrolero(3, true,false,true));
+        Thread t4 = new Thread(new BarcoPetrolero(4, true,false,true));
+        Thread t5 = new Thread(new BarcoPetrolero(5, true,false,true));
+        //Thread m1 = new Thread(new BarcoMercante(8,true,true,false));
+        //Thread t6 = new Thread(new Barco(6, true,false,false));
+        //Thread t7 = new Thread(new Barco(7, false,false,false));
+        //m1.start();
         t1.start();
         t2.start();
         t3.start();
         t4.start();
         t5.start();
-        t6.start();
-        t7.start();
+        //t6.start();
+        //t7.start();
 
         /*
         Thread t4 = new Thread(new Barco(4, false));

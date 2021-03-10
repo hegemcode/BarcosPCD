@@ -1,15 +1,18 @@
 import java.util.concurrent.*;
 public class ZonaCarga {
     private static ZonaCarga z;
-    private int contenedorAgua = 1000000;
+    private int contenedorAgua;
     private int[] contenedores_gas = new int[5];
-    Semaphore mutex,llegada,agua;
-    int contador = 0;
+    private Semaphore[] llegada = new Semaphore[5];
+    private Semaphore mutex;
+    int contadorLlegada = 0;
 
     private ZonaCarga(){
         mutex = new Semaphore(1);
-        agua = new Semaphore(1);
-        llegada = new Semaphore(5);
+        this.contenedorAgua = 1000000;
+        for(int i = 0; i < 5; i++){
+            llegada[i] = new Semaphore(0);
+        }
         for(int i = 0; i < 5; i++){
             contenedores_gas[i] = 1000;
         }
@@ -24,19 +27,25 @@ public class ZonaCarga {
 
     public void llegar(BarcoPetrolero b) throws InterruptedException {
         mutex.acquire();
-        llegada.acquire();
-        if(llegada.drainPermits() == 0){ // Si no hay mas capacidad para acceder al recurso, es decir, si han entrado los 5 barcos
-
+        contadorLlegada++;
+        if(contadorLlegada != 5){
+            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
+            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
+            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
+            mutex.release();
+            llegada[contadorLlegada-1].acquire();
         }
         else{
-            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
-            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
-            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
+            mutex.release();
+            for(int i = 0; i < contadorLlegada - 1; i++){
+                llegada[i].release();
+            }
         }
-
-        mutex.release();
+        // ZONA CRÍTICA
+        repostarAgua(b);
     }
-    public void cogerAgua(BarcoPetrolero b){
+
+    public void repostarAgua(BarcoPetrolero b){
         try {
             mutex.acquire();
         } catch (InterruptedException e) {
