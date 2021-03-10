@@ -50,12 +50,11 @@ public class ZonaCarga {
         try {
             mutex.acquire();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            e.printStackTrace(); }
+        while(b.getDeposito_agua() < 5000){
+            b.setDeposito_agua(b.getDeposito_agua()+1000);
+            System.out.println("El barco petrolero " + b.getId() + " tiene +1000 de agua...");
         }
-        b.setDeposito_agua(5000);
-        System.out.println("El barco petrolero " + b.getId() + " coge 5000l de agua...");
-        System.out.println("El barco petrolero " + b.getId() + " coge 5000l de agua...");
-        System.out.println("El barco petrolero " + b.getId() + " coge 5000l de agua...");
         mutex.release();
     }
 }
