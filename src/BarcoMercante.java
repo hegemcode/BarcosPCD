@@ -13,8 +13,8 @@ public class BarcoMercante extends Barco{
         @param id El id del barco.
         @param entrada Indica si el barco es de entrada o salida.
      */
-    public BarcoMercante(int id, boolean entrada, boolean mercantil) {
-        super(id, entrada,mercantil);
+    public BarcoMercante(int id, boolean entrada, boolean mercantil, boolean petrolero) {
+        super(id, entrada,mercantil, petrolero);
         grua = new Grua("mercante");
     }
     /*
