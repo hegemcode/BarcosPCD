@@ -11,8 +11,9 @@ public class BarcoMercante extends Barco{
         @param id El id del barco.
         @param entrada Indica si el barco es de entrada o salida.
      */
-    public BarcoMercante(int id, boolean entrada, boolean mercantil, int contAzucar, int contSal, int contHarina) {
-        super(id, entrada,mercantil);
+
+    public BarcoMercante(int id, boolean entrada, boolean mercantil, boolean petrolero, int contAzucar, int contSal, int contHarina) {
+        super(id, entrada,mercantil, petrolero);
         contenedores[0] = contAzucar;
         contenedores[1] = contSal;
         contenedores[2] = contHarina;
