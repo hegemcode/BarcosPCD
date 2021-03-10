@@ -1,5 +1,7 @@
+/*
+    Barco mercante que hereda de la clase estandar de barcos "Barco"
+ */
 import java.util.Random;
-
 public class BarcoMercante extends Barco{
 
     private int sal_contenedores = 4;
@@ -51,8 +53,21 @@ public class BarcoMercante extends Barco{
         Puerta.getInstance().salir(this);
         TorreControl.getInstance().finSalida(this);
     }
+    /*
+        Decrementa el numero de contenedores de sal del barco mercante en una unidad
+     */
     public void reducirContenedorSal(){this.sal_contenedores--;}
+    /*
+        Decrementa el numero de contenedores de azucar del barco mercante en una unidad
+     */
     public void reducirContenedorAzucar(){this.azucar_contenedores--;}
+    /*
+        Decrementa el numero de contenedores de harina del barco mercante en una unidad
+     */
     public void reducirContenedorHarina(){this.harina_contenedores--;}
+    /*
+       Devuelve el numero total de contenedores del barco mercante en un momento dado.
+       @return Total de contenedores del barco.
+     */
     public int numeroContenedores(){ return this.harina_contenedores + this.sal_contenedores + this.sal_contenedores; }
 }
