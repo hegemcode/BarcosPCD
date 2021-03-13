@@ -1,9 +1,6 @@
-/*
-Clase Main del programa.
-----------Autores----------
--
--
--
+/**
+ * Clase principal del programa.
+ * @author Jorge del Castillo Gómez, Pedro del Castillo Gómez, Miguel Jara Arroyo
  */
 public class main {
     public static void main(String[] args) {
@@ -15,9 +12,8 @@ public class main {
         Thread g3 = new Thread(new Grua("harina"));
         g1.start();
         g2.start();
-        g3.start();
+        g3.start()
          */
-
         Thread t1 = new Thread(new BarcoPetrolero(1, true,false,true));
         Thread t2 = new Thread(new BarcoPetrolero(2, true,false,true));
         Thread t3 = new Thread(new BarcoPetrolero(3, true,false,true));
