@@ -11,6 +11,7 @@ public class ZonaCarga {
     private Semaphore mutex;
     ArrayList <BarcoPetrolero> listaBarcos;
     int contadorLlegada = 0;
+    private Thread reponedor = new Thread(new Reponedor());
 
     private ZonaCarga(){
         mutex = new Semaphore(1);
@@ -24,6 +25,7 @@ public class ZonaCarga {
         for(int i = 0; i < 5; i++){
             contenedores_gas[i] = 1000;
         }
+        reponedor.start();
     }
 
     public synchronized static ZonaCarga getInstance(){
@@ -56,26 +58,31 @@ public class ZonaCarga {
             repostarGas(b);
         }
         repostarAgua(b);
+        System.out.println("Petrolero " + b.getId() + " ha FINALIZADO y PIDE SALIR");
         //pedir salida
     }
 
     public void repostarGas(BarcoPetrolero p) throws InterruptedException {
         if( contenedores_gas[listaBarcos.indexOf(p)] > 0) {
             p.setDeposito_gas(p.getDeposito_gas() + 1000);
+            System.out.println("Petrolero " + p.getId() + " repone GAS ["+ p.getDeposito_gas() + "/3000]...");
             contenedores_gas[listaBarcos.indexOf(p)] -= 1000;
         }
         if (contenedores_gas[listaBarcos.indexOf(p)] == 0) {
+            System.out.println("El barco petrolero " + p.getId() + " ESPERA PARA REPONER GAS...");
             repostar[listaBarcos.indexOf(p)].release();
             vacio[listaBarcos.indexOf(p)].acquire();
         }
     }
 
-    public void rellenarGas(int id) throws InterruptedException {
+    public void rellenarGas() throws InterruptedException {
         for(int i = 0; i < 5; i++) {
+            System.out.println("Esperando a que se vacien todos los depósitos");
             repostar[i].acquire();
         }
         for(int i = 0; i < 5; i++) {
-            contenedores_gas[listaBarcos.indexOf(id)] = 1000;
+            System.out.println("===RELLENANDO CONTENEDOR..." + i + "===");
+            contenedores_gas[i] = 1000;
             vacio[i].release();
         }
 
@@ -87,7 +94,7 @@ public class ZonaCarga {
             e.printStackTrace(); }
         while(b.getDeposito_agua() < 5000){
             b.setDeposito_agua(b.getDeposito_agua()+1000);
-            System.out.println("El barco petrolero " + b.getId() + " tiene +1000 de agua...");
+            System.out.println("Petrolero " + b.getId() + " repone AGUA ["+ b.getDeposito_agua() + "/5000]...");
         }
         mutex.release();
     }
