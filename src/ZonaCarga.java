@@ -57,9 +57,11 @@ public class ZonaCarga {
         while (b.getDeposito_gas() < 3000) {
             repostarGas(b);
         }
+
         repostarAgua(b);
         System.out.println("Petrolero " + b.getId() + " ha FINALIZADO y PIDE SALIR");
-        //pedir salida
+
+        
     }
 
     public void repostarGas(BarcoPetrolero p) throws InterruptedException {
