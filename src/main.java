@@ -23,6 +23,12 @@ public class main {
         Thread t3 = new Thread(new BarcoPetrolero(3, true,false,true));
         Thread t4 = new Thread(new BarcoPetrolero(4, true,false,true));
         Thread t5 = new Thread(new BarcoPetrolero(5, true,false,true));
+
+       // Thread t6 = new Thread(new BarcoPetrolero(6, true,false,true));
+       // Thread t7= new Thread(new BarcoPetrolero(7, true,false,true));
+        //Thread t8 = new Thread(new BarcoPetrolero(8, true,false,true));
+       // Thread t9 = new Thread(new BarcoPetrolero(9, true,false,true));
+       // Thread t10 = new Thread(new BarcoPetrolero(10, true,false,true));
         //Thread m1 = new Thread(new BarcoMercante(8,true,true,false));
         //Thread t6 = new Thread(new Barco(6, true,false,false));
         //Thread t7 = new Thread(new Barco(7, false,false,false));
@@ -33,8 +39,12 @@ public class main {
         t3.start();
         t4.start();
         t5.start();
-        //t6.start();
-        //t7.start();
+      //  t6.start();
+      //  t7.start();
+       // t8.start();
+       // t9.start();
+        // t10.start();
+
 
         /*
         Thread t4 = new Thread(new Barco(4, false));

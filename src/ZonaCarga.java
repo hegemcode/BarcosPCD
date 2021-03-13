@@ -6,15 +6,16 @@ public class ZonaCarga {
     private int contenedorAgua;
     private int[] contenedores_gas = new int[5];
     private Semaphore[] llegada = new Semaphore[5];
-    private Semaphore[] repostar = new Semaphore [5];
-    private Semaphore[] vacio = new Semaphore [5];
-    private Semaphore mutex;
+    private Semaphore[] repostar = new Semaphore[5];
+    private Semaphore[]  vacio = new Semaphore[5];
+    private Semaphore mutex, mutex2;
     ArrayList <BarcoPetrolero> listaBarcos;
     int contadorLlegada = 0;
     private Thread reponedor = new Thread(new Reponedor());
 
     private ZonaCarga(){
         mutex = new Semaphore(1);
+        mutex2 = new Semaphore(5);
         this.contenedorAgua = 1000000;
         listaBarcos = new ArrayList<>();
         for(int i = 0; i < 5; i++){
@@ -36,6 +37,7 @@ public class ZonaCarga {
     }
 
     public void llegar(BarcoPetrolero b) throws InterruptedException {
+        mutex2.acquire();
         mutex.acquire();
         listaBarcos.add(contadorLlegada, b);
         contadorLlegada++;
@@ -50,7 +52,6 @@ public class ZonaCarga {
             mutex.release();
             for(int i = 0; i < contadorLlegada - 1; i++){
                 llegada[i].release();
-
             }
         }
 
@@ -59,9 +60,10 @@ public class ZonaCarga {
         }
 
         repostarAgua(b);
-        System.out.println("Petrolero " + b.getId() + " ha FINALIZADO y PIDE SALIR");
-
-        
+        if (contadorLlegada == 5) {
+            contadorLlegada = 0;
+        }
+        mutex2.release();
     }
 
     public void repostarGas(BarcoPetrolero p) throws InterruptedException {

@@ -39,9 +39,9 @@ public class Barco implements Runnable {
      */
     public void run() {
         if (entrada) {
-            //TorreControl.getInstance().permisoEntrada(this);
-            //Puerta.getInstance().entrar(this);
-            //TorreControl.getInstance().finEntrada(this);
+            TorreControl.getInstance().permisoEntrada(this);
+            Puerta.getInstance().entrar(this);
+            TorreControl.getInstance().finEntrada(this);
         } else {
             TorreControl.getInstance().permisoSalida(this);
             Puerta.getInstance().salir(this);
