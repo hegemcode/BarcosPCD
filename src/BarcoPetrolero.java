@@ -25,6 +25,10 @@ public class BarcoPetrolero extends Barco{
     public void run() {
         super.run();
         try { ZonaCarga.getInstance().llegar(this); } catch (InterruptedException e) { }
+
+        TorreControl.getInstance().permisoSalida(this);
+        Puerta.getInstance().salir(this);
+        TorreControl.getInstance().finSalida(this);
     }
 
     public void setDeposito_agua(int cantidad){ deposito_agua = cantidad; }
