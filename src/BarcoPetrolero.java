@@ -1,3 +1,8 @@
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Clase que representa los barcos petroleros que heredan de la clase Barco
  */
@@ -27,8 +32,18 @@ public class BarcoPetrolero extends Barco {
             ZonaCarga.getInstance().llegar(this);
         } catch (InterruptedException e) {
         }
-
-        // Una vez el barco ha rellenado sus contenedores, procede a salir del puerto
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
+        RepostarGasTask t1 = new RepostarGasTask(this);
+        RepostarAguaTask t2 = new RepostarAguaTask(this);
+        executor.execute(t1);
+        executor.execute(t2);
+        executor.shutdown();
+        try {
+            executor.awaitTermination(15, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ZonaCarga.getInstance().reiniciarContadorLlegada();
         TorreControl.getInstance().permisoSalida(this);
         Puerta.getInstance().salir(this);
         TorreControl.getInstance().finSalida(this);

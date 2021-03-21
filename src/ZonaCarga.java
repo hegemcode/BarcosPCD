@@ -72,19 +72,6 @@ public class ZonaCarga {
                 llegada[i].release();
             }
         }
-
-        // Repostar Gas
-        while (b.getDeposito_gas() < 3000) {
-            repostarGas(b);
-        }
-        // Repostar Agua
-        repostarAgua(b);
-
-        // Reiniciamos el contador de barcos para los próximos 5 petroleros.
-        if (contadorLlegada == 5) {
-            contadorLlegada = 0;
-        }
-        mutex2.release();
     }
 
     /**
@@ -94,15 +81,17 @@ public class ZonaCarga {
      * @throws InterruptedException
      */
     public void repostarGas(BarcoPetrolero p) throws InterruptedException {
-        if (contenedores_gas[listaBarcos.indexOf(p)] > 0) { // Mientras el depósito no esté vacio se rellena
-            p.setDeposito_gas(p.getDeposito_gas() + 1000);
-            System.out.println("Petrolero " + p.getId() + " repone GAS [" + p.getDeposito_gas() + "/3000]...");
-            contenedores_gas[listaBarcos.indexOf(p)] -= 1000;
-        }
-        if (contenedores_gas[listaBarcos.indexOf(p)] == 0) { // Si el depósito se llena, bloqueamos el proceso de coger y despertamos al proceso reponedor
-            System.out.println("El barco petrolero " + p.getId() + " ESPERA PARA REPONER GAS...");
-            repostar[listaBarcos.indexOf(p)].release();
-            coger[listaBarcos.indexOf(p)].acquire();
+        while (p.getDeposito_gas() < 3000) {
+            if (contenedores_gas[listaBarcos.indexOf(p)] > 0) { // Mientras el depósito no esté vacio se rellena
+                p.setDeposito_gas(p.getDeposito_gas() + 1000);
+                System.out.println("Petrolero " + p.getId() + " repone GAS [" + p.getDeposito_gas() + "/3000]...");
+                contenedores_gas[listaBarcos.indexOf(p)] -= 1000;
+            }
+            if (contenedores_gas[listaBarcos.indexOf(p)] == 0) { // Si el depósito se llena, bloqueamos el proceso de coger y despertamos al proceso reponedor
+                System.out.println("El barco petrolero " + p.getId() + " ESPERA PARA REPONER GAS...");
+                repostar[listaBarcos.indexOf(p)].release();
+                coger[listaBarcos.indexOf(p)].acquire();
+            }
         }
     }
 
@@ -121,7 +110,6 @@ public class ZonaCarga {
             contenedores_gas[i] = 1000;
             coger[i].release();
         }
-
     }
 
     /**
@@ -135,10 +123,19 @@ public class ZonaCarga {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        while (b.getDeposito_agua() < 5000) {
-            b.setDeposito_agua(b.getDeposito_agua() + 1000);
-            System.out.println("Petrolero " + b.getId() + " repone AGUA [" + b.getDeposito_agua() + "/5000]...");
-        }
+        b.setDeposito_agua(b.getDeposito_agua() + 1000);
+        System.out.println("Petrolero " + b.getId() + " repone AGUA [" + b.getDeposito_agua() + "/5000]...");
         mutex.release();
+    }
+
+    /**
+     * Metodo que reinicia el contador de los barcos de llegada a 5 para los próximos petroleros que lleguen
+     */
+    public void reiniciarContadorLlegada(){
+        // Reiniciamos el contador de barcos para los próximos 5 petroleros.
+        if (contadorLlegada == 5) {
+            contadorLlegada = 0;
+        }
+        mutex2.release();
     }
 }
