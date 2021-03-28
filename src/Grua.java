@@ -18,7 +18,13 @@ public class Grua implements Runnable {
      */
     @Override
     public void run() {
-        Plataforma.getInstance().get(id);
+        try {
+            while (true) {
+                Plataforma.getInstance().get(id);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -27,7 +33,7 @@ public class Grua implements Runnable {
      * @param contenedor
      * @param b
      */
-    public void put(String contenedor, BarcoMercante b) {
+    public void put(String contenedor, BarcoMercante b) throws InterruptedException {
         Plataforma.getInstance().put(contenedor, b);
     }
 }
