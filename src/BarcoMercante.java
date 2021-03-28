@@ -40,17 +40,32 @@ public class BarcoMercante extends Barco {
             switch (caso) {
                 case 0:
                     if (contenedores[0] != 0) {
-                        grua.put("sal", this);
+                        try {
+                            grua.put("sal", this);
+                            contenedores[0]--;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                     break;
                 case 1:
                     if (contenedores[1] != 0) {
-                        grua.put("harina", this);
+                        try {
+                            grua.put("harina", this);
+                            contenedores[1]--;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                     break;
                 case 2:
                     if (contenedores[2] != 0) {
-                        grua.put("azucar", this);
+                        try {
+                            grua.put("azucar", this);
+                            contenedores[2]--;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                     break;
             }

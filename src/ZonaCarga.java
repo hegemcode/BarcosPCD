@@ -61,9 +61,9 @@ public class ZonaCarga {
         listaBarcos.add(contadorLlegada, b); // Guardamos el depósito de gas al que va asociado el barco
         contadorLlegada++;
         if (contadorLlegada != 5) { // Caso de no haber llegado los 5 barcos
-            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
-            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
-            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
+           // System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
+           // System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
+           // System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
             mutex.release();
             llegada[contadorLlegada - 1].acquire();
         } else { // Si han llegado los 5 barcos liberamos a los 4 que estaban esperando
@@ -84,11 +84,11 @@ public class ZonaCarga {
         while (p.getDeposito_gas() < 3000) {
             if (contenedores_gas[listaBarcos.indexOf(p)] > 0) { // Mientras el depósito no esté vacio se rellena
                 p.setDeposito_gas(p.getDeposito_gas() + 1000);
-                System.out.println("Petrolero " + p.getId() + " repone GAS [" + p.getDeposito_gas() + "/3000]...");
+               // System.out.println("Petrolero " + p.getId() + " repone GAS [" + p.getDeposito_gas() + "/3000]...");
                 contenedores_gas[listaBarcos.indexOf(p)] -= 1000;
             }
             if (contenedores_gas[listaBarcos.indexOf(p)] == 0) { // Si el depósito se llena, bloqueamos el proceso de coger y despertamos al proceso reponedor
-                System.out.println("El barco petrolero " + p.getId() + " ESPERA PARA REPONER GAS...");
+               // System.out.println("El barco petrolero " + p.getId() + " ESPERA PARA REPONER GAS...");
                 repostar[listaBarcos.indexOf(p)].release();
                 coger[listaBarcos.indexOf(p)].acquire();
             }
@@ -102,11 +102,11 @@ public class ZonaCarga {
      */
     public void rellenarGas() throws InterruptedException {
         for (int i = 0; i < 5; i++) { // Comprobamos que todos los depósitos están vacíos
-            System.out.println("Esperando a que se vacien todos los depósitos");
+           // System.out.println("Esperando a que se vacien todos los depósitos");
             repostar[i].acquire();
         }
         for (int i = 0; i < 5; i++) { // Rellena cada depósito y despierta el hilo del petrolero asociado.
-            System.out.println("===RELLENANDO CONTENEDOR..." + i + "===");
+           // System.out.println("===RELLENANDO CONTENEDOR..." + i + "===");
             contenedores_gas[i] = 1000;
             coger[i].release();
         }
@@ -124,7 +124,7 @@ public class ZonaCarga {
             e.printStackTrace();
         }
         b.setDeposito_agua(b.getDeposito_agua() + 1000);
-        System.out.println("Petrolero " + b.getId() + " repone AGUA [" + b.getDeposito_agua() + "/5000]...");
+       // System.out.println("Petrolero " + b.getId() + " repone AGUA [" + b.getDeposito_agua() + "/5000]...");
         mutex.release();
     }
 
