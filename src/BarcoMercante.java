@@ -25,7 +25,7 @@ public class BarcoMercante extends Barco {
         contenedores[0] = contAzucar;
         contenedores[1] = contSal;
         contenedores[2] = contHarina;
-        grua = new Grua("mercante");
+        grua = new Grua("mercante", Plataforma.getInstance().getDrop());
     }
 
     /**
@@ -40,22 +40,22 @@ public class BarcoMercante extends Barco {
             switch (caso) {
                 case 0:
                     if (contenedores[0] != 0) {
-                        grua.put("sal", this);
+                        grua.put("sal");
                     }
                     break;
                 case 1:
                     if (contenedores[1] != 0) {
-                        grua.put("harina", this);
+                        grua.put("harina");
                     }
                     break;
                 case 2:
                     if (contenedores[2] != 0) {
-                        grua.put("azucar", this);
+                        grua.put("azucar");
                     }
                     break;
             }
         }
-
+        grua.put("DONE");//Infrma de que ha acabado
         // Una vez el mercante ha descargado su contenido, procede a salir del puerto
         TorreControl.getInstance().permisoSalida(this);
         Puerta.getInstance().salir(this);

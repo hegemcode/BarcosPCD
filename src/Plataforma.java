@@ -1,4 +1,7 @@
 import java.sql.SQLOutput;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.locks.*;
 
 /**
@@ -8,6 +11,7 @@ public class Plataforma {
     private static Plataforma p;
     private int capacidad = 1; // Indica que solo cabe un contenedor en la plataforma.
     private boolean barcoSinContenedores; // Indica si quedan o no barcos por depositar sus contenedores.
+    private BlockingQueue<String> Drop = new SynchronousQueue<String>();
 
     Lock monitor = new ReentrantLock();
     Condition sal_grua = monitor.newCondition();
@@ -35,7 +39,9 @@ public class Plataforma {
         }
         return p;
     }
-
+    public SynchronousQueue<String> getDrop(){
+        return (SynchronousQueue<String>) Drop;
+    }
     /**
      * Método en el que un barco mercante pone un contenedor en la plataforma.
      *
@@ -87,34 +93,13 @@ public class Plataforma {
      * @param contenedor Tipo de contenedor que se extrae de la plataforma.
      */
     public void get(String contenedor) {
-        monitor.lock();
-        try {
-            while (capacidad == 1 && !barcoSinContenedores) {
-                try {
-                    switch (contenedor) {
-                        case "sal":
-                            sal_grua.await();
-                            break;
-                        case "azucar":
-                            azucar_grua.await();
-                            break;
-                        case "harina":
-                            harina_grua.await();
-                            break;
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (!barcoSinContenedores) {
-                    capacidad++;
-                    //System.out.println("Contenedor " + contenedor + " extraido de la plataforma...");
-                    //System.out.println("Contenedor " + contenedor + " extraido de la plataforma...");
-                    //System.out.println("Contenedor " + contenedor + " extraido de la plataforma...");
-                    espera_barco.signal();
-                }
+        String cont;
+        try{
+            While(!((cont = Drop.take()).equals("DONE"))){
+                
             }
-        } finally {
-            monitor.unlock();
+        }catch (InterruptedException e){
+            e.printStackTrace();
         }
     }
 }
