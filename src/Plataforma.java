@@ -1,5 +1,4 @@
 import java.sql.SQLOutput;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.locks.*;
@@ -11,7 +10,9 @@ public class Plataforma {
     private static Plataforma p;
     private int capacidad = 1; // Indica que solo cabe un contenedor en la plataforma.
     private boolean barcoSinContenedores; // Indica si quedan o no barcos por depositar sus contenedores.
-    private BlockingQueue<String> Drop = new SynchronousQueue<String>();
+    private BlockingQueue<String> sal = new SynchronousQueue<String>();
+    private BlockingQueue<String> azucar = new SynchronousQueue<String>();
+    private BlockingQueue<String> harina = new SynchronousQueue<String>();
 
     Lock monitor = new ReentrantLock();
     Condition sal_grua = monitor.newCondition();
@@ -48,9 +49,7 @@ public class Plataforma {
      * @param contenedor String con el tipo de contenedor.
      * @param b          BarcoMercante encargado de poner el contenedor.
      */
-    public void put(String contenedor, BarcoMercante b) {
-        monitor.lock();
-        try {
+    public void put(String contenedor, BarcoMercante b) throws InterruptedException {
             if (capacidad == 0) {
                 try {
                     espera_barco.await();
@@ -64,27 +63,24 @@ public class Plataforma {
             //System.out.println("Contenedor " + contenedor + " depositado en la plataforma...");
             switch (contenedor) {
                 case "sal":
-                    sal_grua.signal();
+                    sal.take();
                     b.reducirContenedor(1);
                     break;
                 case "azucar":
-                    azucar_grua.signal();
+                    azucar.take();
                     b.reducirContenedor(0);
                     break;
                 case "harina":
-                    harina_grua.signal();
+                    harina.take();
                     b.reducirContenedor(2);
                     break;
             }
             if (b.numeroContenedores() == 0) {
                 barcoSinContenedores = true;
-                sal_grua.signal();
-                harina_grua.signal();
-                azucar_grua.signal();
+                sal.take();
+                harina.take();
+                azucar.take();
             }
-        } finally {
-            monitor.unlock();
-        }
     }
 
     /**
@@ -95,8 +91,18 @@ public class Plataforma {
     public void get(String contenedor) {
         String cont;
         try{
-            While(!((cont = Drop.take()).equals("DONE"))){
-                
+            while(!((cont = Drop.take()).equals("DONE"))){
+                switch (cont){
+                    case "sal":
+                        sal_grua.await();
+                        break;
+                    case "azucar":
+                        azucar_grua.await();
+                        break;
+                    case "harina":
+                        harina_grua.await();
+                        break;
+                }
             }
         }catch (InterruptedException e){
             e.printStackTrace();
