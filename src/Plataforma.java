@@ -8,17 +8,7 @@ import java.util.concurrent.locks.*;
 public class Plataforma {
     private static Plataforma p;
     private String contenedor;
-    private boolean barcoSinContenedores; // Indica si quedan o no barcos por depositar sus contenedores.
-
-
-
-    Lock monitor = new ReentrantLock();
-    Lock monitor2 = new ReentrantLock();
-
-    Condition sal_grua = monitor.newCondition();
-    Condition azucar_grua = monitor.newCondition();
-    Condition harina_grua = monitor.newCondition();
-    Condition espera_barco = monitor.newCondition();
+    private boolean Fin;
     private SynchronousQueue<String> sal;
     private SynchronousQueue<String> azucar;
     private SynchronousQueue<String> harina;
@@ -29,11 +19,15 @@ public class Plataforma {
      * el depósito y la extracción de los contenedores entre el barco mercante y las gruas del puerto.
      */
     private Plataforma() {
-        this.barcoSinContenedores = false;
+        this.Fin = false;
         sal = new SynchronousQueue<>();
         azucar = new SynchronousQueue<>();
         harina = new SynchronousQueue<>();
         barcoM = new SynchronousQueue<>();
+    }
+
+    public void setFin(boolean fin) {
+        Fin = fin;
     }
 
     /**
@@ -52,6 +46,7 @@ public class Plataforma {
     public String getContenedor() {
         return contenedor;
     }
+
     /**
      * Método en el que un barco mercante pone un contenedor en la plataforma.
      *
@@ -59,29 +54,21 @@ public class Plataforma {
      * @param b          BarcoMercante encargado de poner el contenedor.
      */
     public void put(String contenedor, BarcoMercante b) throws InterruptedException {
-
         this.contenedor = contenedor; // El barco deposita el contenedor
         switch (contenedor) {
             case "sal":
-
-                System.out.println("El barco " + b.getId() + " DEPOSITA un contenedor de " + contenedor.toUpperCase() +  "...");
+                System.out.println("El barco " + b.getId() + " DEPOSITA un contenedor de " + contenedor.toUpperCase() + "...");
                 sal.put(contenedor);
                 break;
             case "azucar":
-
-                System.out.println("El barco " + b.getId() + " DEPOSITA un contenedor de " + contenedor.toUpperCase() +  "...");
+                System.out.println("El barco " + b.getId() + " DEPOSITA un contenedor de " + contenedor.toUpperCase() + "...");
                 azucar.put(contenedor);
                 break;
             case "harina":
-
-                System.out.println("El barco " + b.getId() + " DEPOSITA un contenedor de " + contenedor.toUpperCase() +  "...");
+                System.out.println("El barco " + b.getId() + " DEPOSITA un contenedor de " + contenedor.toUpperCase() + "...");
                 harina.put(contenedor);
                 break;
         }
-        System.out.println("Barco bloqueado");
-        barcoM.take();
-        System.out.println("Barco desbloquado");
-
     }
 
     /**
@@ -90,27 +77,25 @@ public class Plataforma {
      * @param contenedor Tipo de contenedor que se extrae de la plataforma.
      */
     public void get(String contenedor) throws InterruptedException {
-
-        switch (contenedor) {
-            case "sal":
-                System.out.println("La grua " + contenedor.toUpperCase() + " ESPERA...");
-                sal.take();
-                System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() +  "...");
-                break;
-            case "azucar":
-                System.out.println("La grua " + contenedor.toUpperCase() + " ESPERA...");
-                azucar.take();
-                System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() +  "...");                azucar.take();
-                break;
-            case "harina":
-                System.out.println("La grua " + contenedor.toUpperCase() + " ESPERA...");
-                harina.take();
-                System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() +  "...");                harina.take();
-                break;
-        }
-        barcoM.put("Nothing");
-
-        System.out.println("Grua desbloquea barco");
+        do {
+            switch (contenedor) {
+                case "sal":
+                    System.out.println("La grua " + contenedor.toUpperCase() + " ESPERA...");
+                    sal.take();
+                    System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() + "...");
+                    break;
+                case "azucar":
+                    System.out.println("La grua " + contenedor.toUpperCase() + " ESPERA...");
+                    azucar.take();
+                    System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() + "...");
+                    break;
+                case "harina":
+                    System.out.println("La grua " + contenedor.toUpperCase() + " ESPERA...");
+                    harina.take();
+                    System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() + "...");
+                    break;
+            }
+        } while (!this.Fin);
 
     }
 }

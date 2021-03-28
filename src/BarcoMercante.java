@@ -68,6 +68,7 @@ public class BarcoMercante extends Barco {
                     break;
             }
         }
+        Plataforma.getInstance().setFin(true);
 
         // Una vez el mercante ha descargado su contenido, procede a salir del puerto
         TorreControl.getInstance().permisoSalida(this);
