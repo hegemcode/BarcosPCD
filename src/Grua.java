@@ -19,9 +19,7 @@ public class Grua implements Runnable {
     @Override
     public void run() {
         try {
-            while (true) {
                 Plataforma.getInstance().get(id);
-            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

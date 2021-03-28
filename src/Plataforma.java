@@ -54,25 +54,20 @@ public class Plataforma {
      * @param b          BarcoMercante encargado de poner el contenedor.
      */
     public void put(String contenedor, BarcoMercante b) throws InterruptedException {
-
-        this.contenedor = contenedor; // El barco deposita el contenedor
-        switch (this.contenedor) {
+        switch (contenedor) {
             case "sal":
-                sal.put(this.contenedor);
+                sal.put(contenedor);
                 System.out.println("El barco " + b.getId() + " DEPOSITA un contenedor de " + contenedor.toUpperCase() +  "...");
                 break;
             case "azucar":
-                azucar.put(this.contenedor);
+                azucar.put(contenedor);
                 System.out.println("El barco " + b.getId() + " DEPOSITA un contenedor de " + contenedor.toUpperCase() +  "...");
                 break;
             case "harina":
-                harina.put(this.contenedor);
+                harina.put(contenedor);
                 System.out.println("El barco " + b.getId() + " DEPOSITA un contenedor de " + contenedor.toUpperCase() +  "...");
                 break;
         }
-
-        barcoM.take();
-
     }
 
     /**
@@ -81,22 +76,23 @@ public class Plataforma {
      * @param contenedor Tipo de contenedor que se extrae de la plataforma.
      */
     public void get(String contenedor) throws InterruptedException {
-
-        switch (contenedor) {
-            case "sal":
-                sal.take();
-                System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() +  "...");
-                break;
-            case "azucar":
-                azucar.take();
-                System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() +  "...");                azucar.take();
-                break;
-            case "harina":
-                harina.take();
-                System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() +  "...");                harina.take();
-                break;
+        while(true) {
+            switch (contenedor) {
+                case "sal":
+                    sal.take();
+                    System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() + "...");
+                    break;
+                case "azucar":
+                    azucar.take();
+                    System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() + "...");
+                    azucar.take();
+                    break;
+                case "harina":
+                    harina.take();
+                    System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() + "...");
+                    harina.take();
+                    break;
+            }
         }
-        barcoM.put("nothing");
-
     }
 }
