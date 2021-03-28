@@ -96,7 +96,5 @@ public class Plataforma {
                 System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() +  "...");                harina.take();
                 break;
         }
-        barcoM.put("nothing");
-
     }
 }

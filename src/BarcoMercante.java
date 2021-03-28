@@ -7,7 +7,6 @@ public class BarcoMercante extends Barco {
 
     private int contenedores[] = new int[3]; // Posición 0 = azucar; Posición 1 = sal; Posición 2 = harina.
     private Random rand = new Random();
-    private Grua grua;
 
     /**
      * Constructor parametrizado que define el barco mercante con su grua.
@@ -25,7 +24,6 @@ public class BarcoMercante extends Barco {
         contenedores[0] = contAzucar;
         contenedores[1] = contSal;
         contenedores[2] = contHarina;
-        grua = new Grua("mercante");
     }
 
     /**
@@ -41,7 +39,7 @@ public class BarcoMercante extends Barco {
                 case 0:
                     if (contenedores[0] != 0) {
                         try {
-                            grua.put("sal", this);
+                            Plataforma.getInstance().put("azucar", this);
                             contenedores[0]--;
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -51,7 +49,7 @@ public class BarcoMercante extends Barco {
                 case 1:
                     if (contenedores[1] != 0) {
                         try {
-                            grua.put("harina", this);
+                            Plataforma.getInstance().put("sal", this);
                             contenedores[1]--;
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -61,7 +59,7 @@ public class BarcoMercante extends Barco {
                 case 2:
                     if (contenedores[2] != 0) {
                         try {
-                            grua.put("azucar", this);
+                            Plataforma.getInstance().put("harina", this);
                             contenedores[2]--;
                         } catch (InterruptedException e) {
                             e.printStackTrace();
