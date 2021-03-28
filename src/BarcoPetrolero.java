@@ -30,11 +30,10 @@ public class BarcoPetrolero extends Barco {
         super.run();
         try {
             System.out.println("El barco " + this.getId() + " ESPERA para entrar.");
-
-                ZonaCarga.getInstance().getPhaserLlegada().arriveAndAwaitAdvance();
+            ZonaCarga.getInstance().getBarrera().await();
             ZonaCarga.getInstance().llegar(this);
 
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | BrokenBarrierException e) {
             e.printStackTrace();
         }
 
@@ -47,7 +46,10 @@ public class BarcoPetrolero extends Barco {
         while(!executor.isTerminated()){
             // Esperando a que el barco haya terminado de repostar gas y agua para poder salir del puerto
         }
-        //ZonaCarga.getInstance().reiniciarContadorLlegada();
+        try {
+            ZonaCarga.getInstance().getAcabarSalir().await();
+        } catch (InterruptedException e) { e.printStackTrace(); } catch (BrokenBarrierException e) { e.printStackTrace(); }
+
         TorreControl.getInstance().permisoSalida(this);
         Puerta.getInstance().salir(this);
         TorreControl.getInstance().finSalida(this);
