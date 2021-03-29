@@ -30,8 +30,7 @@ public class BarcoPetrolero extends Barco {
         super.run();
         try {
             System.out.println("El barco " + this.getId() + " ESPERA para entrar.");
-
-                ZonaCarga.getInstance().getPhaserLlegada().arriveAndAwaitAdvance();
+            ZonaCarga.getInstance().getCountLlegada().countDown();
             ZonaCarga.getInstance().llegar(this);
 
         } catch (InterruptedException e) {
