@@ -14,8 +14,6 @@ public class ZonaCarga {
     int contadorLlegada = 0; // Cuenta los barcos que han llegado.
 
     private CyclicBarrier repostar; // Sincroniza el proceso reponedor de gas
-    ArrayList<BarcoPetrolero> listaBarcos;
-    int contadorLlegada = 0;
     int contadorLlegadaPetroleros = 0;
     private Phaser phaserLlegada = new Phaser(5);
     private Phaser phaserSalida = new Phaser(5);

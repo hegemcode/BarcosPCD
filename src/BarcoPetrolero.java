@@ -50,7 +50,6 @@ public class BarcoPetrolero extends Barco {
 
         ZonaCarga.getInstance().getPhaserSalida().arrive();
 
-        //ZonaCarga.getInstance().reiniciarContadorLlegada();
         TorreControl.getInstance().permisoSalida(this);
         Puerta.getInstance().salir(this);
         TorreControl.getInstance().finSalida(this);
