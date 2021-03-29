@@ -7,7 +7,6 @@ public class BarcoMercante extends Barco {
 
     private int contenedores[] = new int[3]; // Posición 0 = azucar; Posición 1 = sal; Posición 2 = harina.
     private Random rand = new Random();
-    private Grua grua;
 
     /**
      * Constructor parametrizado que define el barco mercante con su grua.
@@ -25,7 +24,6 @@ public class BarcoMercante extends Barco {
         contenedores[0] = contAzucar;
         contenedores[1] = contSal;
         contenedores[2] = contHarina;
-        grua = new Grua("mercante", Plataforma.getInstance().getDrop());
     }
 
     /**
@@ -40,22 +38,38 @@ public class BarcoMercante extends Barco {
             switch (caso) {
                 case 0:
                     if (contenedores[0] != 0) {
-                        grua.put("sal");
+                        try {
+                            Plataforma.getInstance().put("azucar", this);
+                            contenedores[0]--;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                     break;
                 case 1:
                     if (contenedores[1] != 0) {
-                        grua.put("harina");
+                        try {
+                            Plataforma.getInstance().put("sal", this);
+                            contenedores[1]--;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                     break;
                 case 2:
                     if (contenedores[2] != 0) {
-                        grua.put("azucar");
+                        try {
+                            Plataforma.getInstance().put("harina", this);
+                            contenedores[2]--;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                     break;
             }
         }
-        grua.put("DONE");//Infrma de que ha acabado
+        Plataforma.getInstance().setFin(true);
+
         // Una vez el mercante ha descargado su contenido, procede a salir del puerto
         TorreControl.getInstance().permisoSalida(this);
         Puerta.getInstance().salir(this);

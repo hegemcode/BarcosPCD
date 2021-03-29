@@ -1,3 +1,4 @@
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -28,10 +29,15 @@ public class BarcoPetrolero extends Barco {
     @Override
     public void run() {
         super.run();
-        try { // Llegada a la zona de carga
+        try {
+            System.out.println("El barco " + this.getId() + " ESPERA para entrar.");
+            ZonaCarga.getInstance().getCountLlegada().countDown();
             ZonaCarga.getInstance().llegar(this);
+
         } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
         RepostarGasTask t1 = new RepostarGasTask(this);
         RepostarAguaTask t2 = new RepostarAguaTask(this);
@@ -43,7 +49,7 @@ public class BarcoPetrolero extends Barco {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        ZonaCarga.getInstance().reiniciarContadorLlegada();
+        //ZonaCarga.getInstance().reiniciarContadorLlegada();
         TorreControl.getInstance().permisoSalida(this);
         Puerta.getInstance().salir(this);
         TorreControl.getInstance().finSalida(this);

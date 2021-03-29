@@ -9,31 +9,37 @@ public class ZonaCarga {
     private static ZonaCarga z;
     private int contenedorAgua;
     private int[] contenedores_gas = new int[5];
-    private Semaphore[] llegada = new Semaphore[5];
-    private Semaphore[] repostar = new Semaphore[5];
-    private Semaphore[] coger = new Semaphore[5];
     private Semaphore mutex, mutex2;
     ArrayList<BarcoPetrolero> listaBarcos;
     int contadorLlegada = 0;
-    private Thread reponedor = new Thread(new Reponedor());
-
+    private CountDownLatch countLlegada;
+    private CyclicBarrier repostar;
     /**
      * Constructor por defecto de la zona de carga
      */
     private ZonaCarga() {
+        this.countLlegada = new CountDownLatch(5);
+        this.repostar = new CyclicBarrier(5, new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    rellenarGas();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mutex2 = new Semaphore(1);
         mutex = new Semaphore(1);
-        mutex2 = new Semaphore(5);
         this.contenedorAgua = 1000000;
         listaBarcos = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            llegada[i] = new Semaphore(0);
-            coger[i] = new Semaphore(0);
-            repostar[i] = new Semaphore(0);
-        }
-        for (int i = 0; i < 5; i++) {
             contenedores_gas[i] = 1000;
         }
-        reponedor.start();
+    }
+
+    public CountDownLatch getCountLlegada() {
+        return countLlegada;
     }
 
     /**
@@ -56,23 +62,15 @@ public class ZonaCarga {
      * @throws InterruptedException
      */
     public void llegar(BarcoPetrolero b) throws InterruptedException {
-        mutex2.acquire();
+        countLlegada.await();
         mutex.acquire();
+        System.out.println("El barco " + b.getId() + " ha entrado en la zona carga.");
         listaBarcos.add(contadorLlegada, b); // Guardamos el depósito de gas al que va asociado el barco
         contadorLlegada++;
-        if (contadorLlegada != 5) { // Caso de no haber llegado los 5 barcos
-            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
-            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
-            System.out.println("Espera el barco " + b.getId() + " al resto de petroleros para repostar...");
-            mutex.release();
-            llegada[contadorLlegada - 1].acquire();
-        } else { // Si han llegado los 5 barcos liberamos a los 4 que estaban esperando
-            mutex.release();
-            for (int i = 0; i < contadorLlegada - 1; i++) {
-                llegada[i].release();
-            }
-        }
+        reiniciarContadorLlegada();
+        mutex.release();
     }
+
 
     /**
      * Método que reposta el gas del contenedor de un petrolero.
@@ -80,17 +78,14 @@ public class ZonaCarga {
      * @param p
      * @throws InterruptedException
      */
-    public void repostarGas(BarcoPetrolero p) throws InterruptedException {
+    public void repostarGas(BarcoPetrolero p) throws InterruptedException, BrokenBarrierException {
         while (p.getDeposito_gas() < 3000) {
             if (contenedores_gas[listaBarcos.indexOf(p)] > 0) { // Mientras el depósito no esté vacio se rellena
                 p.setDeposito_gas(p.getDeposito_gas() + 1000);
                 System.out.println("Petrolero " + p.getId() + " repone GAS [" + p.getDeposito_gas() + "/3000]...");
                 contenedores_gas[listaBarcos.indexOf(p)] -= 1000;
-            }
-            if (contenedores_gas[listaBarcos.indexOf(p)] == 0) { // Si el depósito se llena, bloqueamos el proceso de coger y despertamos al proceso reponedor
-                System.out.println("El barco petrolero " + p.getId() + " ESPERA PARA REPONER GAS...");
-                repostar[listaBarcos.indexOf(p)].release();
-                coger[listaBarcos.indexOf(p)].acquire();
+                System.out.println("Petrolero " + p.getId() + " ESPERA a reponder GAS...");
+                repostar.await();
             }
         }
     }
@@ -101,14 +96,9 @@ public class ZonaCarga {
      * @throws InterruptedException
      */
     public void rellenarGas() throws InterruptedException {
-        for (int i = 0; i < 5; i++) { // Comprobamos que todos los depósitos están vacíos
-            System.out.println("Esperando a que se vacien todos los depósitos");
-            repostar[i].acquire();
-        }
         for (int i = 0; i < 5; i++) { // Rellena cada depósito y despierta el hilo del petrolero asociado.
-            System.out.println("===RELLENANDO CONTENEDOR..." + i + "===");
+           System.out.println("===RELLENANDO CONTENEDOR..." + i + "===");
             contenedores_gas[i] = 1000;
-            coger[i].release();
         }
     }
 
@@ -136,6 +126,6 @@ public class ZonaCarga {
         if (contadorLlegada == 5) {
             contadorLlegada = 0;
         }
-        mutex2.release();
     }
+
 }

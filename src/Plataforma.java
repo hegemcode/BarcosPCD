@@ -1,5 +1,4 @@
 import java.sql.SQLOutput;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.locks.*;
 
@@ -8,24 +7,27 @@ import java.util.concurrent.locks.*;
  */
 public class Plataforma {
     private static Plataforma p;
-    private int capacidad = 1; // Indica que solo cabe un contenedor en la plataforma.
-    private boolean barcoSinContenedores; // Indica si quedan o no barcos por depositar sus contenedores.
-    private BlockingQueue<String> sal = new SynchronousQueue<String>();
-    private BlockingQueue<String> azucar = new SynchronousQueue<String>();
-    private BlockingQueue<String> harina = new SynchronousQueue<String>();
-
-    Lock monitor = new ReentrantLock();
-    Condition sal_grua = monitor.newCondition();
-    Condition azucar_grua = monitor.newCondition();
-    Condition harina_grua = monitor.newCondition();
-    Condition espera_barco = monitor.newCondition();
+    private String contenedor;
+    private boolean Fin;
+    private SynchronousQueue<String> sal;
+    private SynchronousQueue<String> azucar;
+    private SynchronousQueue<String> harina;
+    private SynchronousQueue<String> barcoM;
 
     /**
      * Constructor por defecto de la única plataforma que existe en el puerto. Actua de monitor para gestionar
      * el depósito y la extracción de los contenedores entre el barco mercante y las gruas del puerto.
      */
     private Plataforma() {
-        this.barcoSinContenedores = false;
+        this.Fin = false;
+        sal = new SynchronousQueue<>();
+        azucar = new SynchronousQueue<>();
+        harina = new SynchronousQueue<>();
+        barcoM = new SynchronousQueue<>();
+    }
+
+    public void setFin(boolean fin) {
+        Fin = fin;
     }
 
     /**
@@ -40,9 +42,11 @@ public class Plataforma {
         }
         return p;
     }
-    public SynchronousQueue<String> getDrop(){
-        return (SynchronousQueue<String>) Drop;
+
+    public String getContenedor() {
+        return contenedor;
     }
+
     /**
      * Método en el que un barco mercante pone un contenedor en la plataforma.
      *
@@ -50,37 +54,21 @@ public class Plataforma {
      * @param b          BarcoMercante encargado de poner el contenedor.
      */
     public void put(String contenedor, BarcoMercante b) throws InterruptedException {
-            if (capacidad == 0) {
-                try {
-                    espera_barco.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            capacidad--;
-            //System.out.println("Contenedor " + contenedor + " depositado en la plataforma...");
-            //System.out.println("Contenedor " + contenedor + " depositado en la plataforma...");
-            //System.out.println("Contenedor " + contenedor + " depositado en la plataforma...");
-            switch (contenedor) {
-                case "sal":
-                    sal.take();
-                    b.reducirContenedor(1);
-                    break;
-                case "azucar":
-                    azucar.take();
-                    b.reducirContenedor(0);
-                    break;
-                case "harina":
-                    harina.take();
-                    b.reducirContenedor(2);
-                    break;
-            }
-            if (b.numeroContenedores() == 0) {
-                barcoSinContenedores = true;
-                sal.take();
-                harina.take();
-                azucar.take();
-            }
+        this.contenedor = contenedor; // El barco deposita el contenedor
+        switch (contenedor) {
+            case "sal":
+                System.out.println("El barco " + b.getId() + " DEPOSITA un contenedor de " + contenedor.toUpperCase() + "...");
+                sal.put(contenedor);
+                break;
+            case "azucar":
+                System.out.println("El barco " + b.getId() + " DEPOSITA un contenedor de " + contenedor.toUpperCase() + "...");
+                azucar.put(contenedor);
+                break;
+            case "harina":
+                System.out.println("El barco " + b.getId() + " DEPOSITA un contenedor de " + contenedor.toUpperCase() + "...");
+                harina.put(contenedor);
+                break;
+        }
     }
 
     /**
@@ -88,24 +76,26 @@ public class Plataforma {
      *
      * @param contenedor Tipo de contenedor que se extrae de la plataforma.
      */
-    public void get(String contenedor) {
-        String cont;
-        try{
-            while(!((cont = Drop.take()).equals("DONE"))){
-                switch (cont){
-                    case "sal":
-                        sal_grua.await();
-                        break;
-                    case "azucar":
-                        azucar_grua.await();
-                        break;
-                    case "harina":
-                        harina_grua.await();
-                        break;
-                }
+    public void get(String contenedor) throws InterruptedException {
+        do {
+            switch (contenedor) {
+                case "sal":
+                    System.out.println("La grua " + contenedor.toUpperCase() + " ESPERA...");
+                    sal.take();
+                    System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() + "...");
+                    break;
+                case "azucar":
+                    System.out.println("La grua " + contenedor.toUpperCase() + " ESPERA...");
+                    azucar.take();
+                    System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() + "...");
+                    break;
+                case "harina":
+                    System.out.println("La grua " + contenedor.toUpperCase() + " ESPERA...");
+                    harina.take();
+                    System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() + "...");
+                    break;
             }
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
+        } while (!this.Fin);
+
     }
 }
