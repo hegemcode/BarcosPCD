@@ -67,7 +67,7 @@ public class ZonaCarga {
      */
     public void llegar(BarcoPetrolero b) throws InterruptedException {
         mutex.acquire();
-        System.out.println("El barco " + b.getId() + " ESPERA para entrar.");
+        System.out.println("El barco " + b.getId() + " ESPERA para entrar en la zona de carga.");
         contadorLlegadaPetroleros++;
         mutex.release();
         ZonaCarga.getInstance().getPhaserSalida().awaitAdvance(contadorLlegadaPetroleros/5);
