@@ -9,24 +9,16 @@ public class ZonaCarga {
     private static ZonaCarga z;
     private int contenedorAgua;
     private int[] contenedores_gas = new int[5];
-    //private Semaphore[] coger = new Semaphore[5];
-    private Semaphore mutex, mutex2;
+    private Semaphore mutex, mutex2, mutex3;
     ArrayList<BarcoPetrolero> listaBarcos;
     int contadorLlegada = 0;
     private Phaser phaserLlegada = new Phaser(5);
-   // private Thread reponedor = new Thread(new Reponedor());
-   // private CyclicBarrier barrera;
     private CyclicBarrier repostar;
+    private boolean puedeEntrar = true;
     /**
      * Constructor por defecto de la zona de carga
      */
     private ZonaCarga() {
-       /* this.barrera = new CyclicBarrier(5, new Runnable() {
-            @Override
-            public void run() {
-                reiniciarContadorLlegada();
-            }
-        });*/
 
         this.repostar = new CyclicBarrier(5, new Runnable() {
             @Override
@@ -40,16 +32,13 @@ public class ZonaCarga {
         });
         mutex2 = new Semaphore(1);
         mutex = new Semaphore(1);
+        mutex3 = new Semaphore(1);
+
         this.contenedorAgua = 1000000;
         listaBarcos = new ArrayList<>();
-        /*
-        for (int i = 0; i < 5; i++) {
-            coger[i] = new Semaphore(0);
-        }*/
         for (int i = 0; i < 5; i++) {
             contenedores_gas[i] = 1000;
         }
-        //reponedor.start();
     }
 
     public Phaser getPhaserLlegada() {
@@ -79,8 +68,6 @@ public class ZonaCarga {
         mutex.acquire();
         System.out.println("El barco " + b.getId() + " ha entrado en la zona carga.");
         listaBarcos.add(contadorLlegada, b); // Guardamos el depósito de gas al que va asociado el barco
-        contadorLlegada++;
-        reiniciarContadorLlegada();
         mutex.release();
     }
 
@@ -100,8 +87,8 @@ public class ZonaCarga {
                 System.out.println("Petrolero " + p.getId() + " ESPERA a reponder GAS...");
                 repostar.await();
             }
-
         }
+        decrementarContadorLlegada();
     }
 
     /**
@@ -143,5 +130,28 @@ public class ZonaCarga {
             contadorLlegada = 0;
         }
     }
-
+    public boolean getPuedeEntrar(){
+         return puedeEntrar;
+    }
+    public void decrementarContadorLlegada() throws InterruptedException {
+        mutex2.acquire();
+        contadorLlegada--;
+        if(contadorLlegada == 0){
+            puedeEntrar = true;
+        }
+        mutex2.release();
+    }
+    public void incrementarContadorLlegada() throws InterruptedException {
+        mutex3.acquire();
+        contadorLlegada++;
+        mutex3.release();
+        mutex2.acquire();
+        ZonaCarga.getInstance().getPhaserLlegada().arriveAndAwaitAdvance();
+        mutex2.acquire();
+        if(contadorLlegada == 5){
+            puedeEntrar = false;
+            phaserLlegada = new Phaser(5);
+        }
+        mutex2.release();
+    }
 }

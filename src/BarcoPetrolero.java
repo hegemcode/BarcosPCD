@@ -1,7 +1,4 @@
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 /**
  * Clase que representa los barcos petroleros que heredan de la clase Barco
@@ -9,7 +6,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class BarcoPetrolero extends Barco {
     private int deposito_agua = 0;
     private int deposito_gas = 0;
-
+    private Semaphore mutex2 = new Semaphore(1);
     /**
      * Constructor parametrizado del petrolero. LLama al constructor parametrizado de la clase Barco.
      *
@@ -29,10 +26,16 @@ public class BarcoPetrolero extends Barco {
     public void run() {
         super.run();
         try {
-            System.out.println("El barco " + this.getId() + " ESPERA para entrar.");
+            mutex2.acquire();
+            System.out.println("El barco " + this.getId() + " ESPERA para entrar en ZONA CARGA.");
 
-                ZonaCarga.getInstance().getPhaserLlegada().arriveAndAwaitAdvance();
-            ZonaCarga.getInstance().llegar(this);
+                while(ZonaCarga.getInstance().getPhaserLlegada().getArrivedParties() == 4 && !ZonaCarga.getInstance().getPuedeEntrar()){
+
+                }
+
+                ZonaCarga.getInstance().incrementarContadorLlegada();
+                ZonaCarga.getInstance().llegar(this);
+                mutex2.release();
 
         } catch (InterruptedException e) {
             e.printStackTrace();
