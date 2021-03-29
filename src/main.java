@@ -12,9 +12,9 @@ public class main {
         Thread g1 = new Thread(new Grua("sal"));
         Thread g2 = new Thread(new Grua("azucar"));
         Thread g3 = new Thread(new Grua("harina"));
-        //g1.start();
-        //g2.start();
-        //g3.start();
+        g1.start();
+        g2.start();
+        g3.start();
 
 
 
@@ -30,16 +30,16 @@ public class main {
         Thread t8 = new Thread(new BarcoPetrolero(8, true, false, true));
         Thread t9 = new Thread(new BarcoPetrolero(9, true, false, true));
         Thread t10 = new Thread(new BarcoPetrolero(10, true, false, true));
-        //Thread m1 = new Thread(new BarcoMercante(11,true,true,12,20,5, false ));
+        Thread m1 = new Thread(new BarcoMercante(20,true,true,12,20,5, false ));
 
         // BARCOS NORMALES DE ENTRADA Y SALIDA
-        /*
-        Thread t6 = new Thread(new Barco(6, false,false,false));
-        Thread t7 = new Thread(new Barco(7, true,false,false));
-        Thread t8 = new Thread(new Barco(8, true,false,false));
-        Thread t9 = new Thread(new Barco(9, false,false,false));
-        Thread t10 = new Thread(new Barco(10, false,false,false));
-         */
+
+        Thread t11 = new Thread(new Barco(11, false,false,false));
+        Thread t12 = new Thread(new Barco(12, true,false,false));
+        Thread t13 = new Thread(new Barco(13, true,false,false));
+        Thread t14 = new Thread(new Barco(90, false,false,false));
+        Thread t15 = new Thread(new Barco(100, false,false,false));
+
 
         // RUN DE LOS THREADS
         t1.start();
@@ -47,14 +47,17 @@ public class main {
         t3.start();
         t4.start();
         t5.start();
-
-
         t6.start();
         t7.start();
         t8.start();
         t9.start();
         t10.start();
-        //m1.start();
+        t11.start();
+        t12.start();
+        t13.start();
+        t14.start();
+        t15.start();
+        m1.start();
 
     }
 }
