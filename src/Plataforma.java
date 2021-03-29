@@ -56,7 +56,7 @@ public class Plataforma {
             //System.out.println("Contenedor " + contenedor + " depositado en la plataforma...");
             //System.out.println("Contenedor " + contenedor + " depositado en la plataforma...");
             //System.out.println("Contenedor " + contenedor + " depositado en la plataforma...");
-            switch (contenedor) {
+            switch (contenedor) { // Despierta a la grua encargada de coger el contenedor colocado.
                 case "sal":
                     sal_grua.signal();
                     b.reducirContenedor(1);
