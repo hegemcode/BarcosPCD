@@ -30,14 +30,10 @@ public class BarcoPetrolero extends Barco {
     public void run() {
         super.run();
         try {
-            System.out.println("El barco " + this.getId() + " ESPERA para entrar.");
-            ZonaCarga.getInstance().getCountLlegada().countDown();
             ZonaCarga.getInstance().llegar(this);
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
         RepostarGasTask t1 = new RepostarGasTask(this);
         RepostarAguaTask t2 = new RepostarAguaTask(this);
@@ -49,6 +45,9 @@ public class BarcoPetrolero extends Barco {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        ZonaCarga.getInstance().getPhaserSalida().arrive();
+
         //ZonaCarga.getInstance().reiniciarContadorLlegada();
         TorreControl.getInstance().permisoSalida(this);
         Puerta.getInstance().salir(this);

@@ -12,7 +12,6 @@ public class Plataforma {
     private SynchronousQueue<String> sal;
     private SynchronousQueue<String> azucar;
     private SynchronousQueue<String> harina;
-    private SynchronousQueue<String> barcoM;
 
     /**
      * Constructor por defecto de la única plataforma que existe en el puerto. Actua de monitor para gestionar
@@ -23,7 +22,6 @@ public class Plataforma {
         sal = new SynchronousQueue<>();
         azucar = new SynchronousQueue<>();
         harina = new SynchronousQueue<>();
-        barcoM = new SynchronousQueue<>();
     }
 
     public void setFin(boolean fin) {

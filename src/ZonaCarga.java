@@ -9,16 +9,17 @@ public class ZonaCarga {
     private static ZonaCarga z;
     private int contenedorAgua;
     private int[] contenedores_gas = new int[5];
-    private Semaphore mutex, mutex2;
+    private Semaphore mutex;
     ArrayList<BarcoPetrolero> listaBarcos;
     int contadorLlegada = 0;
-    private CountDownLatch countLlegada;
     private CyclicBarrier repostar;
+    int contadorLlegadaPetroleros = 0;
+    private Phaser phaserLlegada = new Phaser(5);
+    private Phaser phaserSalida = new Phaser(5);
     /**
      * Constructor por defecto de la zona de carga
      */
     private ZonaCarga() {
-        this.countLlegada = new CountDownLatch(5);
         this.repostar = new CyclicBarrier(5, new Runnable() {
             @Override
             public void run() {
@@ -29,7 +30,6 @@ public class ZonaCarga {
                 }
             }
         });
-        mutex2 = new Semaphore(1);
         mutex = new Semaphore(1);
         this.contenedorAgua = 1000000;
         listaBarcos = new ArrayList<>();
@@ -38,8 +38,12 @@ public class ZonaCarga {
         }
     }
 
-    public CountDownLatch getCountLlegada() {
-        return countLlegada;
+    public Phaser getPhaserLlegada() {
+        return phaserLlegada;
+    }
+
+    public Phaser getPhaserSalida() {
+        return phaserSalida;
     }
 
     /**
@@ -62,10 +66,19 @@ public class ZonaCarga {
      * @throws InterruptedException
      */
     public void llegar(BarcoPetrolero b) throws InterruptedException {
-        countLlegada.await();
+        mutex.acquire();
+        System.out.println("El barco " + b.getId() + " ESPERA para entrar.");
+        contadorLlegadaPetroleros++;
+        mutex.release();
+        ZonaCarga.getInstance().getPhaserSalida().awaitAdvance(contadorLlegadaPetroleros/5);
+        ZonaCarga.getInstance().getPhaserLlegada().arriveAndAwaitAdvance();
         mutex.acquire();
         System.out.println("El barco " + b.getId() + " ha entrado en la zona carga.");
-        listaBarcos.add(contadorLlegada, b); // Guardamos el depósito de gas al que va asociado el barco
+        if(listaBarcos.size()<5){
+            listaBarcos.add(contadorLlegada, b); // Guardamos el depósito de gas al que va asociado el barco
+        }else{
+            listaBarcos.set(contadorLlegada,b);
+        }
         contadorLlegada++;
         reiniciarContadorLlegada();
         mutex.release();
