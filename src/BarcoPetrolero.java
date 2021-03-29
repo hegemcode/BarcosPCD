@@ -1,4 +1,8 @@
-import java.util.concurrent.*;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Clase que representa los barcos petroleros que heredan de la clase Barco
@@ -26,10 +30,7 @@ public class BarcoPetrolero extends Barco {
     public void run() {
         super.run();
         try {
-            System.out.println("El barco " + this.getId() + " ESPERA para entrar.");
-            ZonaCarga.getInstance().getCountLlegada().countDown(); // Controla que lleguen 5 barcos antes de que empiecen a repostar.
             ZonaCarga.getInstance().llegar(this);
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -41,12 +42,15 @@ public class BarcoPetrolero extends Barco {
         executor.execute(t1);
         executor.execute(t2);
         executor.shutdown();
-
         try {
             executor.awaitTermination(15, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        ZonaCarga.getInstance().getPhaserSalida().arrive();
+
+        //ZonaCarga.getInstance().reiniciarContadorLlegada();
         TorreControl.getInstance().permisoSalida(this);
         Puerta.getInstance().salir(this);
         TorreControl.getInstance().finSalida(this);

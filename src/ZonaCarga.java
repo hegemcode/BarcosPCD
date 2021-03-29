@@ -13,14 +13,17 @@ public class ZonaCarga {
     ArrayList<BarcoPetrolero> listaBarcos; // Lista que almacena los barcos que han llegado a la zona.
     int contadorLlegada = 0; // Cuenta los barcos que han llegado.
 
-    private CountDownLatch countLlegada; // Sincroniza la llegada de los barcos
     private CyclicBarrier repostar; // Sincroniza el proceso reponedor de gas
+    ArrayList<BarcoPetrolero> listaBarcos;
+    int contadorLlegada = 0;
+    int contadorLlegadaPetroleros = 0;
+    private Phaser phaserLlegada = new Phaser(5);
+    private Phaser phaserSalida = new Phaser(5);
     /**
      * Constructor por defecto de la zona de carga
      */
     private ZonaCarga() {
-        this.countLlegada = new CountDownLatch(5); // Inicializado a 5, el numero de barcos máxmimos en la zona
-        this.repostar = new CyclicBarrier(5, new Runnable() { // Cuando se vacian todos los contenedores de gas, invoca al proceso reponedor.
+        this.repostar = new CyclicBarrier(5, new Runnable() {
             @Override
             public void run() {
                 try {
@@ -38,13 +41,12 @@ public class ZonaCarga {
         }
     }
 
-    /**
-     * Devuelve el mecanismo de sincronización CountDownLatch
-     *
-     * @return countLlegada.
-     */
-    public CountDownLatch getCountLlegada() {
-        return countLlegada;
+    public Phaser getPhaserLlegada() {
+        return phaserLlegada;
+    }
+
+    public Phaser getPhaserSalida() {
+        return phaserSalida;
     }
 
     /**
@@ -67,10 +69,19 @@ public class ZonaCarga {
      * @throws InterruptedException
      */
     public void llegar(BarcoPetrolero b) throws InterruptedException {
-        countLlegada.await(); // Hasta que no hayan llegado los 5 petroleros, espera.
+        mutex.acquire();
+        System.out.println("El barco " + b.getId() + " ESPERA para entrar en la zona de carga.");
+        contadorLlegadaPetroleros++;
+        mutex.release();
+        ZonaCarga.getInstance().getPhaserSalida().awaitAdvance(contadorLlegadaPetroleros/5);
+        ZonaCarga.getInstance().getPhaserLlegada().arriveAndAwaitAdvance();
         mutex.acquire();
         System.out.println("El barco " + b.getId() + " ha entrado en la zona carga.");
-        listaBarcos.add(contadorLlegada, b); // Guardamos el depósito de gas al que va asociado el barco
+        if(listaBarcos.size()<5){
+            listaBarcos.add(contadorLlegada, b); // Guardamos el depósito de gas al que va asociado el barco
+        }else{
+            listaBarcos.set(contadorLlegada,b);
+        }
         contadorLlegada++;
         reiniciarContadorLlegada(); // El quinto barco que entra reinicia el contador.
         mutex.release();
