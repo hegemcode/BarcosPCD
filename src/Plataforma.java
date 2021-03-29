@@ -9,10 +9,11 @@ public class Plataforma {
     private static Plataforma p;
     private String contenedor;
     private boolean Fin;
+
+    // Gestiona la sincronización entre cada grua y el barco
     private SynchronousQueue<String> sal;
     private SynchronousQueue<String> azucar;
     private SynchronousQueue<String> harina;
-    private SynchronousQueue<String> barcoM;
 
     /**
      * Constructor por defecto de la única plataforma que existe en el puerto. Actua de monitor para gestionar
@@ -23,9 +24,12 @@ public class Plataforma {
         sal = new SynchronousQueue<>();
         azucar = new SynchronousQueue<>();
         harina = new SynchronousQueue<>();
-        barcoM = new SynchronousQueue<>();
     }
 
+    /**
+     * Modifica el atributo fin.
+     * @param fin
+     */
     public void setFin(boolean fin) {
         Fin = fin;
     }
@@ -43,6 +47,11 @@ public class Plataforma {
         return p;
     }
 
+    /**
+     * Devuelve el contenedor de la plataforma
+     *
+     * @return
+     */
     public String getContenedor() {
         return contenedor;
     }
@@ -78,6 +87,7 @@ public class Plataforma {
      */
     public void get(String contenedor) throws InterruptedException {
         do {
+
             switch (contenedor) {
                 case "sal":
                     System.out.println("La grua " + contenedor.toUpperCase() + " ESPERA...");
@@ -95,7 +105,6 @@ public class Plataforma {
                     System.out.println("La grua " + contenedor.toUpperCase() + " COGE un contenedor de  " + contenedor.toUpperCase() + "...");
                     break;
             }
-        } while (!this.Fin);
-
+        } while (!this.Fin); // Mientras el barco no haya salido de la plataforma.
     }
 }

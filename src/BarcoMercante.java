@@ -68,7 +68,7 @@ public class BarcoMercante extends Barco {
                     break;
             }
         }
-        Plataforma.getInstance().setFin(true);
+        Plataforma.getInstance().setFin(true); // Detiene el método coger de las gruas pues no se depositarán más contenedores.
 
         // Una vez el mercante ha descargado su contenido, procede a salir del puerto
         TorreControl.getInstance().permisoSalida(this);

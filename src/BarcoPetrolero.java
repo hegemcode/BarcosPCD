@@ -1,7 +1,4 @@
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 /**
  * Clase que representa los barcos petroleros que heredan de la clase Barco
@@ -30,23 +27,26 @@ public class BarcoPetrolero extends Barco {
         super.run();
         try {
             System.out.println("El barco " + this.getId() + " ESPERA para entrar.");
-            ZonaCarga.getInstance().getCountLlegada().countDown();
+            ZonaCarga.getInstance().getCountLlegada().countDown(); // Controla que lleguen 5 barcos antes de que empiecen a repostar.
             ZonaCarga.getInstance().llegar(this);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+        // Se crean dos hilos para repostar. Repostar Agua y Repostar Gas.
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
         RepostarGasTask t1 = new RepostarGasTask(this);
         RepostarAguaTask t2 = new RepostarAguaTask(this);
         executor.execute(t1);
         executor.execute(t2);
         executor.shutdown();
-        while(!executor.isTerminated()){
-            // Esperando a que el barco haya terminado de repostar gas y agua para poder salir del puerto
+
+        try {
+            executor.awaitTermination(15, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        //ZonaCarga.getInstance().reiniciarContadorLlegada();
         TorreControl.getInstance().permisoSalida(this);
         Puerta.getInstance().salir(this);
         TorreControl.getInstance().finSalida(this);
