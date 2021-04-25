@@ -1,3 +1,8 @@
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import pcd.util.Ventana;
 /**
  * Clase que representa la torre de control encargada de coordinar los barcos que entran en el puerto.
  */
@@ -6,7 +11,7 @@ public class TorreControl {
     // Contadores: barcos que están entrando, saliendo o esperando a salir
     private int b_entrando, b_saliendo;
     private int b_esperandoSalir;
-
+    private int contadorRemoto;
     /**
      * Constructor por defecto de la torre de control.
      */
@@ -14,6 +19,7 @@ public class TorreControl {
         this.b_entrando = 0;
         this.b_saliendo = 0;
         this.b_esperandoSalir = 0;
+        this.contadorRemoto = 0;
     }
 
     /**
@@ -41,7 +47,9 @@ public class TorreControl {
         while (b_saliendo != 0 || b_esperandoSalir != 0) {
             try {
                 System.out.println("El barco " + b.getId() + " esperando para entrar.");
+                contadorRemoto++;
                 wait();
+                contadorRemoto--;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -64,9 +72,11 @@ public class TorreControl {
         while (b_entrando != 0) {
             try {
                 b_esperandoSalir++;
+                contadorRemoto++;
                 System.out.println("El barco " + b.getId() + " esperando para salir.");
                 wait();
                 b_esperandoSalir--;
+                contadorRemoto--;
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -106,5 +116,20 @@ public class TorreControl {
         //System.out.println("El barco " + b.getId() + " ha acabado de salir...");
         this.b_saliendo--;
         notifyAll();
+    }
+
+    public int getContadorRemoto(){
+        return this.contadorRemoto;
+    }
+
+
+    public static void main(String[] args) {
+        try {
+            Ventana v = new Ventana("TorreControl");
+            Registry r = LocateRegistry.getRegistry();
+            EstadoPuerto stub = (EstadoPuerto) UnicastRemoteObject.exportObject(new EstadoPuertoImpl(TorreControl.getInstance(),v),0);
+            r.rebind("infoTorre",stub);
+            v.addText("Objeto remoto EstadoPuerto subido a RMI...");
+        } catch (RemoteException e) { e.printStackTrace(); }
     }
 }

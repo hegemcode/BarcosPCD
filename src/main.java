@@ -1,3 +1,8 @@
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+
 /**
  * Clase principal del programa.
  * @author Jorge del Castillo Gómez, Pedro del Castillo Gómez, Miguel Jara Arroyo
