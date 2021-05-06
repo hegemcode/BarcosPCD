@@ -4,16 +4,16 @@
  */
 public class main {
     public static void main(String[] args) {
-        //Plataforma p = Plataforma.getInstance();
+        Plataforma p = Plataforma.getInstance();
         ZonaCarga z = ZonaCarga.getInstance();
-        /*
+
         Thread g1 = new Thread(new Grua("sal"));
         Thread g2 = new Thread(new Grua("azucar"));
         Thread g3 = new Thread(new Grua("harina"));
         g1.start();
         g2.start();
-        g3.start()
-         */
+        g3.start();
+
         Thread t1 = new Thread(new BarcoPetrolero(1, true,false,true));
         Thread t2 = new Thread(new BarcoPetrolero(2, true,false,true));
         Thread t3 = new Thread(new BarcoPetrolero(3, true,false,true));
@@ -25,7 +25,7 @@ public class main {
         //Thread t8 = new Thread(new BarcoPetrolero(8, true,false,true));
        // Thread t9 = new Thread(new BarcoPetrolero(9, true,false,true));
        // Thread t10 = new Thread(new BarcoPetrolero(10, true,false,true));
-        //Thread m1 = new Thread(new BarcoMercante(8,true,true,false));
+        Thread m1 = new Thread(new BarcoMercante(11,true,true,12,20,5, false ));
         //Thread t6 = new Thread(new Barco(6, true,false,false));
         //Thread t7 = new Thread(new Barco(7, false,false,false));
         //m1.start();
@@ -35,6 +35,7 @@ public class main {
         t3.start();
         t4.start();
         t5.start();
+        m1.start();
       //  t6.start();
       //  t7.start();
        // t8.start();
