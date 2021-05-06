@@ -53,9 +53,7 @@ public class Plataforma {
                 }
             }
             capacidad--;
-            //System.out.println("Contenedor " + contenedor + " depositado en la plataforma...");
-            //System.out.println("Contenedor " + contenedor + " depositado en la plataforma...");
-            //System.out.println("Contenedor " + contenedor + " depositado en la plataforma...");
+            System.out.println("Contenedor " + contenedor + " depositado en la plataforma...");
             switch (contenedor) {
                 case "sal":
                     sal_grua.signal();
@@ -107,9 +105,7 @@ public class Plataforma {
                 }
                 if (!barcoSinContenedores) {
                     capacidad++;
-                    //System.out.println("Contenedor " + contenedor + " extraido de la plataforma...");
-                    //System.out.println("Contenedor " + contenedor + " extraido de la plataforma...");
-                    //System.out.println("Contenedor " + contenedor + " extraido de la plataforma...");
+                    System.out.println("Contenedor " + contenedor + " extraido de la plataforma...");
                     espera_barco.signal();
                 }
             }
