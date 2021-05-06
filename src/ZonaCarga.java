@@ -12,7 +12,7 @@ public class ZonaCarga {
     private Semaphore[] llegada = new Semaphore[5];
     private Semaphore[] repostar = new Semaphore[5];
     private Semaphore[] coger = new Semaphore[5];
-    private Semaphore mutex, mutex2;
+    private Semaphore mutex;
     ArrayList<BarcoPetrolero> listaBarcos;
     int contadorLlegada = 0;
     private Thread reponedor = new Thread(new Reponedor());
@@ -22,7 +22,6 @@ public class ZonaCarga {
      */
     private ZonaCarga() {
         mutex = new Semaphore(1);
-        mutex2 = new Semaphore(5);
         this.contenedorAgua = 1000000;
         listaBarcos = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -56,7 +55,6 @@ public class ZonaCarga {
      * @throws InterruptedException
      */
     public void llegar(BarcoPetrolero b) throws InterruptedException {
-        mutex2.acquire();
         mutex.acquire();
         listaBarcos.add(contadorLlegada, b); // Guardamos el depósito de gas al que va asociado el barco
         contadorLlegada++;
@@ -84,7 +82,7 @@ public class ZonaCarga {
         if (contadorLlegada == 5) {
             contadorLlegada = 0;
         }
-        mutex2.release();
+
     }
 
     /**
