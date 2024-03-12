@@ -1,1 +1,1 @@
-Ejemplos práctico para abordar los desafíos de concurrencia en un entorno de gestión de puertos de barcos, desarrollados como parte de la asignatura de Programación Concurrente y Distribuida. El proyecto se implementa en Java.
+Practical examples tackling the challenges of concurrency in a ship port management environment. This project is developed as part of the **Concurrent and Distributed Programming** course, providing real-world scenarios and solutions for handling concurrent operations within a port management system. The entire project is implemented in Java.
